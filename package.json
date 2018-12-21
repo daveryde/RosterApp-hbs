@@ -1,0 +1,17 @@
+{
+  "name": "rosterapp-hbs",
+  "version": "1.0.0",
+  "description": "custom face roster with one click search",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "author": "David Cordova",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^5.4.0"
+  }
+}
