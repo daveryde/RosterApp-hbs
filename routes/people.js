@@ -8,9 +8,21 @@ const Person = mongoose.model('people');
 
 // Person retrival route
 router.get('/', (req, res) => {
-  if (!req.body) return res.sendStatus(400);
+  let person = [];
 
-  res.send('welcome, ' + req.body.name);
+  if (req.body) {
+    person.push({
+      text: 'Person recieved',
+      name: req.body.name
+    });
+  }
+
+  if (person.length > 0) {
+    res.render('cards/card', {
+      text: text,
+      name: name
+    });
+  }
 });
 
 module.exports = router;
