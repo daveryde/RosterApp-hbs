@@ -1,5 +1,9 @@
-<h1>It works!</h1>
-<ul>
-  <li>{{name}}</li>
-  <li>{{number}}</li>
-</ul>
+<div class="container">
+  {{#if people}}
+  <ul>
+    {{#each people}}
+    <li>{{name}}</li>
+    {{/each}}
+  </ul>
+  {{/if}}
+</div>

@@ -3,18 +3,9 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const PersonSchema = new Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  number: {
-    type: String,
-    required: true
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  }
+  _id: mongoose.Schema.Types.ObjectId,
+  name: String,
+  number: Number
 });
 
-mongoose.model('people', PersonSchema);
+module.exports = mongoose.model('people', PersonSchema);
