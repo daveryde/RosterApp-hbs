@@ -11,7 +11,9 @@ router.get('/', (req, res) => {
   Person.find()
     .then(person => {
       console.log(person);
-      res.status(200).json(person);
+      res.render('../views/cards/card', {
+        person: person
+      });
     })
     .catch(err => {
       res.status(404).json(err);

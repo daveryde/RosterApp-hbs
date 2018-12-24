@@ -1,6 +1,15 @@
-{{#if person}}
-<figure class="figure">
-  <img src={{person.image}} alt={{person.name}} class="figure-img img-fluid rounded">
-  <figcaption class="figure-caption">{{name}}</figcaption>
-</figure>
-{{/if }}
+<div class='col-sm-4 col-md-4 col-lg-3 mb-2'>
+  <div class='card'>
+    <img class='card-img-top' src="https://apps.azcorrections.gov/mugshots/{{number}}.jpg" id={{number}} alt={{name}}>
+    <div class='card-body'>
+      <h4 class='card-title'>{{name}}</h4>
+      <p class='card-text'>
+        {{number}}
+      </p>
+      <form action="/people/{{id}}?_method=DELETE" method="DELETE">
+        <button type="submit" class="btn left-align red waves-effect waves-light">
+          Delete</button>
+      </form>
+    </div>
+  </div>
+</div>

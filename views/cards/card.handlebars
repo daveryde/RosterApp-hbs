@@ -1,9 +1,7 @@
 <div class="container">
-  {{#if people}}
-  <ul>
-    {{#each people}}
-    <li>{{name}}</li>
-    {{/each}}
-  </ul>
+  {{#if person}}
+  {{#each person}}
+  {{> figure}}
+  {{/each}}
   {{/if}}
 </div>
