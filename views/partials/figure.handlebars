@@ -7,8 +7,10 @@
       <p class='card-text'>
         {{number}}
       </p>
-      <form action="/product/{{id}}">
-        <button type="submit" class="btn btn-danger">
+
+      <form action="/products/{{id}}?_method=DELETE" method="post">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit" class="btn btn-danger btn-block">
           Delete</button>
       </form>
     </div>

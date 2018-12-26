@@ -8,6 +8,7 @@ const Product = mongoose.model('product');
 
 // Product retrieval route
 router.get('/:id', (req, res) => {
+  // Find the product by request id and render to view
   const id = req.params.id;
   Product.findById(id)
     .then(product => {
@@ -19,7 +20,7 @@ router.get('/:id', (req, res) => {
         });
       } else {
         res.status(404);
-        res.render({
+        res.render('/', {
           error: 'No one found with that id'
         });
       }
@@ -41,10 +42,10 @@ router.post('/', (req, res) => {
     number: req.body.number
   });
 
-  // Save product to the database
+  // Save product to the database and redirect to view
   product
     .save()
-    .then(result => {
+    .then(() => {
       res.status(201);
       res.redirect('/results');
     })
@@ -55,10 +56,10 @@ router.post('/', (req, res) => {
 
 // Product deleted route
 router.delete('/:id', (req, res) => {
-  const id = req.params.id;
-  Product.deleteOne({ _id: id })
-    .then(product => {
-      // console.log(product + "was deleted")
+  // Find product in database by id, then delete and redirect to view
+  Product.deleteOne({ _id: req.params.id })
+    .then(() => {
+      res.status(200);
       res.redirect('/results');
     })
     .catch(err => {
