@@ -12,11 +12,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Load models
-require('./models/Person');
+require('./models/Product');
 
 // Load routes
 const results = require('./routes/results');
-const people = require('./routes/people');
+const products = require('./routes/products');
 
 // Load database keys
 const db = require('./config/keys').mongoURI;
@@ -47,7 +47,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/results', results);
-app.use('/people', people);
+app.use('/products', products);
 
 const port = process.env.PORT || 3000;
 

@@ -2,17 +2,18 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-// Load person model
-require('../models/Person');
-const Person = mongoose.model('people');
+// Load product model
+require('../models/Product');
+const Product = mongoose.model('product');
 
 // Results route
 router.get('/', (req, res) => {
-  Person.find()
-    .then(person => {
-      console.log(person);
+  Product.find()
+    .exec()
+    .then(product => {
+      res.status(200);
       res.render('../views/cards/card', {
-        person: person
+        product
       });
     })
     .catch(err => {
