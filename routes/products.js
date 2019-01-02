@@ -6,6 +6,21 @@ const router = express.Router();
 require('../models/Product');
 const Product = mongoose.model('product');
 
+// All products retrival route
+router.get('/', (req, res) => {
+  Product.find()
+    .exec()
+    .then(product => {
+      res.status(200);
+      res.render('../views/cards/card', {
+        product
+      });
+    })
+    .catch(err => {
+      res.status(404).json(err);
+    });
+});
+
 // Product retrieval route
 router.get('/:id', (req, res) => {
   // Find the product by request id and render to view
@@ -47,7 +62,9 @@ router.post('/', (req, res) => {
     .save()
     .then(() => {
       res.status(201);
-      res.redirect('/results');
+      res.render('../views/cards/individual', {
+        errors
+      });
     })
     .catch(err => {
       res.status(500).json(err);
@@ -60,7 +77,7 @@ router.delete('/:id', (req, res) => {
   Product.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(200);
-      res.redirect('/results');
+      res.redirect('/products');
     })
     .catch(err => {
       res.status(409).json(err);
