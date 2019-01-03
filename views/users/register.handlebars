@@ -1,22 +1,20 @@
 <div class="container">
   <div class="row">
-    <div class="col-md-3">
-      {{#if errors}}
-      <h3 class="text-danger text-center">{{errors.message}}</h3>
-      {{/if}}
+    <div class="col-md-12 text-center">
+      <span class="text-danger">{{errors}}</span>
     </div>
-    <div class="col-sm-12 col-md-6">
-      <form action="/users" method="POST">
+    <div class="col-sm-12 col-md-6 mx-auto">
+      <form action="/users/register" method="POST">
         <div class="form-group">
           <label for="name">First Name</label>
-          <input type="text" class="form-control mb-2" name="firstName">
+          <input type="text" class="form-control mb-2" name="firstName" value={{firstName}}>
           <label for="name">Last Name</label>
-          <input type="text" class="form-control mb-2" name="lastName">
+          <input type="text" class="form-control mb-2" name="lastName" value={{lastName}}>
           <label for="email">Email</label>
-          <input type="email" class="form-control mb-2" name="email">
+          <input type="email" required class="form-control mb-2" name="email" value={{email}}>
           <label for="password">Password</label>
-          <input type="password" class="form-control mb-2" name="password">
-          <button type="submit" class="btn btn-default btn-block mt-4">Create User</button>
+          <input type="password" class="form-control mb-2" name="password" value={{password}}>
+          <button type="submit" class="btn btn-default btn-block mt-4">Create An Account</button>
       </form>
     </div>
   </div>

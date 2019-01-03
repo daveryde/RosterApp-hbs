@@ -1,18 +1,19 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const router = express.Router();
 
 require('../models/User');
 const User = mongoose.model('user');
 
+// Test route
 router.get('/test', (req, res) => res.json({ msg: 'Users Works' }));
 
 // Get users
 router.get('/', (req, res) => {
   User.find()
     .then(users => {
-      res.status(200);
-      res.json(users);
+      res.status(200).json(users);
     })
     .catch(err => {
       res.status(404).json(err);
@@ -25,35 +26,39 @@ router.get('/register', (req, res) => {
 });
 
 // Create user route
-router.post('/', (req, res) => {
+router.post('/register', (req, res) => {
+  // Check for errors in the required form fields
   let errors = [];
 
-  if (req.body.firstName.value === '') {
-    errors.push({ message: 'Please enter your first name' });
-  }
-  if (req.body.lastName.value === '') {
-    errors.push({ message: 'Please enter your last name' });
-  }
-  if (req.body.email.value === '') {
-    errors.push({ message: 'Please enter an email address' });
-  }
-  if (req.body.password.value === '') {
-    errors.push({ message: 'Please enter a password' });
+  if (
+    req.body.firstName === '' ||
+    req.body.lastName === '' ||
+    req.body.email === '' ||
+    req.body.password === ''
+  ) {
+    errors.push('Oops! Please complete each field');
   }
 
-  if (errors > 0) {
-    res.render('../views/users/register', {
+  if (req.body.password.length < 4) {
+    errors.push('Password must be at least 4 characters');
+  }
+
+  if (errors.length > 0) {
+    res.render('/users/register', {
       errors: errors,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
       password: req.body.password
     });
-  } else {
+  }
+  // Determine whether user email has already been used
+  else
     User.findOne({ email: req.body.email }).then(user => {
       if (user) {
-        res.redirect('/');
+        res.redirect('/products');
       } else {
+        // Store users in the database
         const newUser = new User({
           firstName: req.body.firstName,
           lastName: req.body.lastName,
@@ -61,18 +66,24 @@ router.post('/', (req, res) => {
           password: req.body.password
         });
 
-        newUser
-          .save()
-          .then(user => {
-            res.status(201);
-            res.json(user);
-          })
-          .catch(err => {
-            res.status(400).json(err);
+        // Use bcrypt to encrypt user password
+        bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(newUser.password, salt, (err, hash) => {
+            newUser.password = hash;
+            newUser
+              .save()
+              .then(user => {
+                console.log(user);
+                res.redirect('/products');
+              })
+              .catch(err => {
+                console.log(err);
+                return;
+              }); // end of database storing
           });
+        });
       }
     });
-  }
 });
 
 module.exports = router;
