@@ -1,0 +1,19 @@
+<p>
+  <a class="btn btn-primary btn-lg btn-block" data-toggle="collapse" href="#userLogin" role="button" aria-expanded="false"
+    aria-controls="userLogin">Login</a>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="userLogin">
+      <form action="/users/login" method="POST">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" required class="form-control" name="email" value={{email}}>
+          <label for="password">Password</label>
+          <input type="password" class="form-control" name="password" value={{password}}>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

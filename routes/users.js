@@ -25,6 +25,11 @@ router.get('/register', (req, res) => {
   res.render('../views/users/register');
 });
 
+// Redirect to login user route
+router.get('/login', (req, res) => {
+  res.render('../views/users/login');
+});
+
 // Create user route
 router.post('/register', (req, res) => {
   // Check for errors in the required form fields
@@ -44,7 +49,7 @@ router.post('/register', (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render('/users/register', {
+    res.render('../views/users/register', {
       errors: errors,
       firstName: req.body.firstName,
       lastName: req.body.lastName,
@@ -85,5 +90,7 @@ router.post('/register', (req, res) => {
       }
     });
 });
+
+router.post('/login', (req, res) => {});
 
 module.exports = router;

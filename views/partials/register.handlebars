@@ -1,0 +1,23 @@
+<p>
+  <a class="btn btn-primary btn-lg btn-block" data-toggle="collapse" href="#userRegister" role="button"
+    aria-expanded="false" aria-controls="userRegister">Create An Account</a>
+</p>
+<div class="row">
+  <div class="col">
+    <div class="collapse multi-collapse" id="userRegister">
+      <form action="/users/register" method="POST">
+        <div class="form-group">
+          <label for="name">First Name</label>
+          <input type="text" class="form-control" name="firstName" value={{firstName}}>
+          <label for="name">Last Name</label>
+          <input type="text" class="form-control" name="lastName" value={{lastName}}>
+          <label for="email">Email</label>
+          <input type="email" required class="form-control" name="email" value={{email}}>
+          <label for="password">Password</label>
+          <input type="password" class="form-control" name="password" value={{password}}>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Create An Account</button>
+      </form>
+    </div>
+  </div>
+</div>

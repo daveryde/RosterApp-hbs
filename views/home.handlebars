@@ -1,7 +1,20 @@
 <div class="container">
-  <div class="jumbotron bg-light mt-3 text-center">
-    <h1 class="display-4">{{title}}</h1>
-    <p class="lead">A place where you can build your own face roster using an id number</p>
-    <a href="/users/register">Register To Create and View Cards</a>
+  <div class="row justify-content-md-center">
+    <div class="col-sm-12 col-md-9">
+      <div class="jumbotron bg-secondary mt-2 text-white text-center">
+        <h1 class="display-4">{{title}}</h1>
+        <p class="lead">A place where you can build your own face roster using an id number</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-sm-12 col-md-4">
+      {{> login}}
+    </div>
+    <div class="col-sm-12 col-md-4">
+      {{> register}}
+    </div>
   </div>
 </div>
