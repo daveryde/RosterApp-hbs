@@ -61,7 +61,7 @@ router.post('/register', (req, res) => {
   else
     User.findOne({ email: req.body.email }).then(user => {
       if (user) {
-        res.redirect('/products');
+        res.redirect('/');
       } else {
         // Store users in the database
         const newUser = new User({
@@ -91,6 +91,32 @@ router.post('/register', (req, res) => {
     });
 });
 
-router.post('/login', (req, res) => {});
+router.post('/login', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Find user by email
+  User.findOne({ email })
+    .then(user => {
+      if (!user) {
+        return res.status(404).json({ msg: 'No such email exists' });
+      }
+
+      // Check password
+      bcrypt.compare(password, user.password, (err, response) => {
+        if (response == true) {
+          res.status(200);
+          // res.json({ msg: 'Success' });
+          res.redirect('/products');
+        } else {
+          res.status(400);
+          res.json({ msg: 'Unauthorized' });
+        }
+      });
+    })
+    .catch(err => {
+      res.status(409).json(err);
+    });
+});
 
 module.exports = router;
