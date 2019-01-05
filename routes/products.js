@@ -12,7 +12,7 @@ router.get('/', (req, res) => {
     .exec()
     .then(product => {
       res.status(200);
-      res.render('../views/cards/card', {
+      res.render('../views/products/card', {
         product
       });
     })
@@ -30,7 +30,7 @@ router.get('/:id', (req, res) => {
       // console.log(product);
       if (product) {
         res.status(200);
-        res.render('../views/cards/individual', {
+        res.render('../views/products/individual', {
           product
         });
       } else {
@@ -62,7 +62,7 @@ router.post('/', (req, res) => {
     .save()
     .then(() => {
       res.status(201);
-      res.render('../views/cards/individual', {
+      res.render('../views/products/individual', {
         errors
       });
     })

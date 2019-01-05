@@ -30,8 +30,19 @@ mongoose
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
+// Load helpers
+const { list } = require('./helpers/hbs');
+
 // Load Handlebars middleware
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.engine(
+  'handlebars',
+  exphbs({
+    defaultLayout: 'main',
+    helpers: {
+      list
+    }
+  })
+);
 app.set('view engine', 'handlebars');
 
 // Static folder

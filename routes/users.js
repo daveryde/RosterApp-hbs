@@ -33,42 +33,38 @@ router.get('/login', (req, res) => {
 // Create user route
 router.post('/register', (req, res) => {
   // Check for errors in the required form fields
+  const { firstName, lastName, email, password } = req.body;
   let errors = [];
 
-  if (
-    req.body.firstName === '' ||
-    req.body.lastName === '' ||
-    req.body.email === '' ||
-    req.body.password === ''
-  ) {
-    errors.push('Oops! Please complete each field');
+  if (!firstName || !lastName || !email || !password) {
+    errors.push({ msg: 'Oops! Please complete each field' });
   }
 
-  if (req.body.password.length < 4) {
-    errors.push('Password must be at least 4 characters');
+  if (password.length < 4) {
+    errors.push({ msg: 'Password must be at least 4 characters' });
   }
 
   if (errors.length > 0) {
     res.render('../views/users/register', {
-      errors: errors,
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      email: req.body.email,
-      password: req.body.password
+      errors,
+      firstName,
+      lastName,
+      email,
+      password
     });
   }
   // Determine whether user email has already been used
   else
-    User.findOne({ email: req.body.email }).then(user => {
+    User.findOne({ email }).then(user => {
       if (user) {
         res.redirect('/');
       } else {
         // Store users in the database
         const newUser = new User({
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          email: req.body.email,
-          password: req.body.password
+          firstName,
+          lastName,
+          email,
+          password
         });
 
         // Use bcrypt to encrypt user password
@@ -92,31 +88,57 @@ router.post('/register', (req, res) => {
 });
 
 router.post('/login', (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  // Error check
+  const { email, password } = req.body;
+  let errors = [];
 
-  // Find user by email
-  User.findOne({ email })
-    .then(user => {
-      if (!user) {
-        return res.status(404).json({ msg: 'No such email exists' });
-      }
+  if (!email || !password) {
+    errors.push({ msg: 'Oops! Please complete each field' });
+  }
 
-      // Check password
-      bcrypt.compare(password, user.password, (err, response) => {
-        if (response == true) {
-          res.status(200);
-          // res.json({ msg: 'Success' });
-          res.redirect('/products');
-        } else {
-          res.status(400);
-          res.json({ msg: 'Unauthorized' });
-        }
-      });
-    })
-    .catch(err => {
-      res.status(409).json(err);
+  if (password.length < 4) {
+    errors.push({ msg: 'Password must be at least 4 characters' });
+  }
+
+  if (errors.length > 0) {
+    res.status(400);
+    res.render('../views/users/login', {
+      errors,
+      email,
+      password
     });
+  } else {
+    // Find user by email
+    User.findOne({ email })
+      .then(user => {
+        if (!user) {
+          errors.push('No such email exists');
+          res.status(404);
+          res.render('../views/users/login', {
+            errors,
+            password
+          });
+        }
+
+        // Check password
+        bcrypt.compare(password, user.password, (err, response) => {
+          if (response == true) {
+            res.status(200);
+            // res.json({ msg: 'Success' });
+            res.redirect('/products');
+          } else {
+            errors.push('Unauthorized');
+            res.status(400);
+            res.render('../views/users/login', {
+              errors
+            });
+          }
+        });
+      })
+      .catch(err => {
+        res.status(409).json(err);
+      });
+  }
 });
 
 module.exports = router;
