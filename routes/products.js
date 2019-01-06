@@ -50,31 +50,27 @@ router.get('/:id', (req, res) => {
 });
 
 // Product added route
-router.post(
-  '/',
-  passport.authenticate('jwt', { session: false }),
-  (req, res) => {
-    // Set the request values to the Product schema
-    const product = new Product({
-      _id: new mongoose.Types.ObjectId(),
-      name: req.body.name,
-      number: req.body.number
-    });
+router.post('/', (req, res) => {
+  // Set the request values to the Product schema
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    name: req.body.name,
+    number: req.body.number
+  });
 
-    // Save product to the database and redirect to view
-    product
-      .save()
-      .then(() => {
-        res.status(201);
-        res.render('../views/products/individual', {
-          errors
-        });
-      })
-      .catch(err => {
-        res.status(500).json(err);
+  // Save product to the database and redirect to view
+  product
+    .save()
+    .then(() => {
+      res.status(201);
+      res.render('../views/products/individual', {
+        errors
       });
-  }
-);
+    })
+    .catch(err => {
+      res.status(500).json(err);
+    });
+});
 
 // Product deleted route
 router.delete('/:id', (req, res) => {

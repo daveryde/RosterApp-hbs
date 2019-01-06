@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const exphbs = require('express-handlebars');
 const bodyParser = require('body-parser');
+const passport = require('passport');
 const methodOverride = require('method-override');
 
 // Initial express
@@ -30,10 +31,17 @@ mongoose
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
+// Load helpers
+const { loginUser, logoutUser } = require('./helpers/hbs');
+
 // Load Handlebars middleware
 app.engine(
   'handlebars',
   exphbs({
+    helpers: {
+      loginUser,
+      logoutUser
+    },
     defaultLayout: 'main'
   })
 );
@@ -44,6 +52,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Method override middleware
 app.use(methodOverride('_method'));
+
+// Passport Middleware
+app.use(passport.initialize());
 
 // Routes
 app.get('/', (req, res) => {
