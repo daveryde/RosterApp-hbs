@@ -1,6 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+const keys = require('../config/keys');
 const router = express.Router();
 
 require('../models/User');
@@ -121,15 +124,44 @@ router.post('/login', (req, res) => {
         }
 
         // Check password
-        bcrypt.compare(password, user.password, (err, response) => {
-          if (response == true) {
-            res.status(200);
-            // res.json({ msg: 'Success' });
-            res.redirect('/products');
+        // bcrypt.compare(password, user.password, (err, response) => {
+        //   if (response == true) {
+        //     res.status(200);
+        //     // res.json({ msg: 'Success' });
+        //     res.redirect('/products');
+        //   } else {
+        //     errors.push('Unauthorized');
+        //     res.status(400);
+        //     res.render('../views/users/login', {
+        //       errors
+        //     });
+        //   }
+        // });
+
+        // Check password
+        bcrypt.compare(password, user.password).then(isMatch => {
+          if (isMatch) {
+            // User matched
+            const payload = {
+              id: user.id,
+              name: user.name
+            };
+
+            // Sign JWT Token
+            jwt.sign(
+              payload,
+              keys.secretOrKey,
+              { expiresIn: 3600 },
+              (err, token) => {
+                res.json({
+                  success: true,
+                  token: 'Bearer ' + token
+                });
+              }
+            );
           } else {
-            errors.push('Unauthorized');
-            res.status(400);
-            res.render('../views/users/login', {
+            errors.push({ msg: 'Password incorrect' });
+            return res.render('../views/users/login', {
               errors
             });
           }
@@ -140,5 +172,17 @@ router.post('/login', (req, res) => {
       });
   }
 });
+
+router.get(
+  '/current',
+  passport.authenticate('jwt', { session: false }),
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    });
+  }
+);
 
 module.exports = router;
