@@ -1,19 +1,24 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const passport = require('passport');
 const router = express.Router();
+const { isAuthenticated } = require('../helpers/hbs');
 
 // Load product model
 require('../models/Product');
 const Product = mongoose.model('product');
 
+// Product Dashboard
+router.get('/dashboard', isAuthenticated, (req, res) => {
+  res.render('../views/dashboard/dashboard');
+});
+
 // All products retrival route
-router.get('/', (req, res) => {
+router.get('/dashboard/roster', isAuthenticated, (req, res) => {
   Product.find()
     .exec()
     .then(product => {
       res.status(200);
-      res.render('../views/dashboard/dashboard', {
+      res.render('../views/products/card', {
         product
       });
     })
@@ -23,7 +28,7 @@ router.get('/', (req, res) => {
 });
 
 // Product retrieval route
-router.get('/:id', (req, res) => {
+router.get('/:id', isAuthenticated, (req, res) => {
   // Find the product by request id and render to view
   const id = req.params.id;
   Product.findById(id)
@@ -50,7 +55,7 @@ router.get('/:id', (req, res) => {
 });
 
 // Product added route
-router.post('/', (req, res) => {
+router.post('/', isAuthenticated, (req, res) => {
   // Set the request values to the Product schema
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
@@ -73,7 +78,7 @@ router.post('/', (req, res) => {
 });
 
 // Product deleted route
-router.delete('/:id', (req, res) => {
+router.delete('/:id', isAuthenticated, (req, res) => {
   // Find product in database by id, then delete and redirect to view
   Product.deleteOne({ _id: req.params.id })
     .then(() => {
