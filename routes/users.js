@@ -20,7 +20,7 @@ router.get('/register', (req, res) => {
 // Login Form POST
 router.post(
   '/login',
-  passport.authenticate('local', { failureRedirect: '/login' }),
+  passport.authenticate('local', { failureRedirect: '/users/login' }),
   (req, res) => {
     res.redirect('/products');
   }
