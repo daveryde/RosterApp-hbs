@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
     .exec()
     .then(product => {
       res.status(200);
-      res.render('../views/products/card', {
+      res.render('../views/dashboard/dashboard', {
         product
       });
     })

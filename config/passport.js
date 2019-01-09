@@ -1,25 +1,43 @@
-const JwtStrategy = require('passport-jwt').Strategy;
-const ExtractJwt = require('passport-jwt').ExtractJwt;
 const LocalStrategy = require('passport-local').Strategy;
 const mongoose = require('mongoose');
-const User = mongoose.model('users');
-const keys = require('../config/keys');
+const bcrypt = require('bcryptjs');
 
-const opts = {};
-opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-opts.secretOrKey = keys.secretOrKey;
+// Load user model
+require('../models/User');
+const User = mongoose.model('user');
 
-module.exports = passport => {
+// Passport Local Strategy Boilerplate
+module.exports = function(passport) {
   passport.use(
-    new JwtStrategy(opts, (jwt_payload, done) => {
-      User.findById(jwt_payload.id)
-        .then(user => {
-          if (user) {
+    new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
+      // Match User
+      User.findOne({
+        email: email
+      }).then(user => {
+        if (!user) {
+          return done(null, false, { msg: 'No User Found' });
+        }
+
+        // Bcrypt - Match password
+        bcrypt.compare(password, user.password, (err, isMatch) => {
+          if (err) throw err;
+          if (isMatch) {
             return done(null, user);
+          } else {
+            return done(null, false, { msg: 'Password Incorrect' });
           }
-          return done(null, false);
-        })
-        .catch(err => console.log(err));
+        });
+      });
     })
   );
+
+  passport.serializeUser(function(user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function(id, done) {
+    User.findById(id, function(err, user) {
+      done(err, user);
+    });
+  });
 };

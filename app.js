@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const exphbs = require('express-handlebars');
+const session = require('express-session');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const methodOverride = require('method-override');
@@ -31,17 +32,10 @@ mongoose
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
-// Load helpers
-const { loginUser, logoutUser } = require('./helpers/hbs');
-
 // Load Handlebars middleware
 app.engine(
   'handlebars',
   exphbs({
-    helpers: {
-      loginUser,
-      logoutUser
-    },
     defaultLayout: 'main'
   })
 );
@@ -53,8 +47,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Method override middleware
 app.use(methodOverride('_method'));
 
+// Express session middleware
+app.use(
+  session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+  })
+);
+
 // Passport Middleware
 app.use(passport.initialize());
+app.use(passport.session());
+
+// Passport Config
+require('./config/passport')(passport);
 
 // Routes
 app.get('/', (req, res) => {

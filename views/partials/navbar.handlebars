@@ -4,7 +4,7 @@
       <h3 class="text-white"><i class="fas fa-list-alt"></i>
         <span class="ml-2">Roster App</span></h3>
     </a>
-    {{#if user}}
+    
     <form action="/products" method="post" class="form-inline">
       <label for="name">
         <input class="form-control mr-sm-2" type="text" placeholder="Name" name="name">
@@ -15,9 +15,7 @@
 
       <a href="/products" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</a>
     </form>
-    {{else}}
 
     <a href="/about" class="btn btn-primary">About</a>
-    {{/if}}
   </nav>
 </div>
