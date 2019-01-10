@@ -1,24 +1,23 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const { isAuthenticated } = require('../helpers/hbs');
+const { ensureAuthenticated } = require('../helpers/hbs');
 
 // Load product model
 require('../models/Product');
 const Product = mongoose.model('product');
 
 // Product Dashboard
-router.get('/dashboard', isAuthenticated, (req, res) => {
-  res.render('../views/dashboard/dashboard');
+router.get('/dashboard', ensureAuthenticated, (req, res) => {
+  res.render('dashboard/index');
 });
 
 // All products retrival route
-router.get('/dashboard/roster', isAuthenticated, (req, res) => {
+router.get('/dashboard/roster', ensureAuthenticated, (req, res) => {
   Product.find()
-    .exec()
     .then(product => {
       res.status(200);
-      res.render('../views/products/card', {
+      res.render('products/card', {
         product
       });
     })
@@ -28,7 +27,7 @@ router.get('/dashboard/roster', isAuthenticated, (req, res) => {
 });
 
 // Product retrieval route
-router.get('/:id', isAuthenticated, (req, res) => {
+router.get('/:id', ensureAuthenticated, (req, res) => {
   // Find the product by request id and render to view
   const id = req.params.id;
   Product.findById(id)
@@ -55,7 +54,7 @@ router.get('/:id', isAuthenticated, (req, res) => {
 });
 
 // Product added route
-router.post('/', isAuthenticated, (req, res) => {
+router.post('/', ensureAuthenticated, (req, res) => {
   // Set the request values to the Product schema
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
@@ -68,9 +67,7 @@ router.post('/', isAuthenticated, (req, res) => {
     .save()
     .then(() => {
       res.status(201);
-      res.render('../views/products/individual', {
-        errors
-      });
+      res.redirect('/products/dashboard/roster');
     })
     .catch(err => {
       res.status(500).json(err);
@@ -78,12 +75,12 @@ router.post('/', isAuthenticated, (req, res) => {
 });
 
 // Product deleted route
-router.delete('/:id', isAuthenticated, (req, res) => {
+router.delete('/:id', ensureAuthenticated, (req, res) => {
   // Find product in database by id, then delete and redirect to view
   Product.deleteOne({ _id: req.params.id })
     .then(() => {
       res.status(200);
-      res.redirect('/products');
+      res.redirect('/products/dashboard/roster');
     })
     .catch(err => {
       res.status(409).json(err);

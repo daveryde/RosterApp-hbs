@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const exphbs = require('express-handlebars');
 const session = require('express-session');
+const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const methodOverride = require('method-override');
@@ -17,6 +18,9 @@ app.use(bodyParser.json());
 // Load routes
 const products = require('./routes/products');
 const users = require('./routes/users');
+
+// Passport Config
+require('./config/passport')(passport);
 
 // Load database keys
 const db = require('./config/keys').mongoURI;
@@ -60,14 +64,26 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Passport Config
-require('./config/passport')(passport);
+app.use(flash());
+
+// Global variables
+app.use((req, res, next) => {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  res.locals.user = req.user || null;
+  next();
+});
 
 // Routes
 app.get('/', (req, res) => {
   res.render('home', {
     title: 'Roster App'
   });
+});
+
+app.get('/about', (req, res) => {
+  res.render('home');
 });
 
 app.use('/products', products);

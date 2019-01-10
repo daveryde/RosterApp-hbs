@@ -9,22 +9,22 @@ const User = mongoose.model('user');
 
 // Redirect to login user route
 router.get('/login', (req, res) => {
-  res.render('../views/users/login');
+  res.render('users/login');
 });
 
 // Redirect to register user route
 router.get('/register', (req, res) => {
-  res.render('../views/users/register');
+  res.render('users/register');
 });
 
 // Login Form POST
-router.post(
-  '/login',
-  passport.authenticate('local', { failureRedirect: '/users/login' }),
-  (req, res) => {
-    res.redirect('/products/dashboard');
-  }
-);
+router.post('/login', (req, res, next) => {
+  passport.authenticate('local', {
+    successRedirect: '/products/dashboard',
+    failureRedirect: '/users/login',
+    failureFlash: true
+  })(req, res, next);
+});
 
 // Create user route
 router.post('/register', (req, res) => {
@@ -33,15 +33,15 @@ router.post('/register', (req, res) => {
   let errors = [];
 
   if (!firstName || !lastName || !email || !password) {
-    errors.push({ msg: 'Oops! Please complete each field' });
+    errors.push({ message: 'Oops! Please complete each field' });
   }
 
   if (password.length < 4) {
-    errors.push({ msg: 'Password must be at least 4 characters' });
+    errors.push({ message: 'Password must be at least 4 characters' });
   }
 
   if (errors.length > 0) {
-    res.render('../views/users/register', {
+    res.render('users/register', {
       errors,
       firstName,
       lastName,
@@ -53,6 +53,7 @@ router.post('/register', (req, res) => {
   else
     User.findOne({ email }).then(user => {
       if (user) {
+        req.flash('error_msg', 'Email already registered');
         res.redirect('/');
       } else {
         // Store users in the database
@@ -70,7 +71,10 @@ router.post('/register', (req, res) => {
             newUser
               .save()
               .then(user => {
-                console.log(user);
+                req.flash(
+                  'success_msg',
+                  'You are now registered and can log in!'
+                );
                 res.redirect('/products');
               })
               .catch(err => {
@@ -86,6 +90,7 @@ router.post('/register', (req, res) => {
 // Logout User
 router.get('/logout', (req, res) => {
   req.logout();
+  req.flash('success_msg', 'You are logged out');
   res.redirect('/users/login');
 });
 
