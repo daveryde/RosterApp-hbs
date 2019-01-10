@@ -1,3 +1,15 @@
+{{#if user}}
+<section class="container">
+  <div class="row justify-content-md-center mt-5">
+    <div class="col-sm-12 col-md-9">
+      <div class="jumbotron bg-secondary text-white text-center">
+        <h1 class="display-4">{{user.firstName}}'s RosterApp</h1>
+        <p class="lead">A place where {{user.firstName}} can build a face roster using an id number</p>
+      </div>
+    </div>
+  </div>
+</section>
+{{else}}
 <section class="container">
   <div class="row justify-content-md-center mt-5">
     <div class="col-sm-12 col-md-9">
@@ -18,6 +30,7 @@
     </div>
   </div>
 </section>
+{{/if}}
 <section class="container">
   <div class="row mt-5">
     <div class="col-md-4 mb-4">

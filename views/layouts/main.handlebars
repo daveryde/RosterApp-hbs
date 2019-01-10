@@ -12,12 +12,12 @@
 </head>
 
 <body>
-  {{> navbar}}
+  <div class="container-fluid">
+    {{> navbar}}
+  </div>
   <div class="container">
     {{> msg}}
     {{> errors}}
-  </div>
-  <div class="container">
     {{{body}}}
   </div>
 

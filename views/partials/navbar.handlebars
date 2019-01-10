@@ -1,21 +1,40 @@
 <div class="container-fluid">
-  <nav class="navbar navbar-light bg-secondary shadow mt-2 mb-2">
+  <nav class="navbar navbar-expand-lg navbar-light bg-secondary shadow mt-2 mb-2">
     <a href="/" class="navbar-brand">
       <h3 class="text-white"><i class="fas fa-list-alt"></i>
         <span class="ml-2">Roster App</span></h3>
     </a>
 
-    <form action="/products" method="post" class="form-inline">
-      <label for="name">
-        <input class="form-control mr-sm-2" type="text" placeholder="Name" name="name">
-      </label>
-      <label for="number">
-        <input class="form-control mr-sm-2" type="text" placeholder="Number" name="number">
-      </label>
+    {{#if user}}
 
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    <!-- If user is signed in, links and search form are displayed -->
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
+      aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <a href="/about" class="btn btn-primary">About</a>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a class="nav-link text-white" href="/products/dashboard"><button class="btn btn-secondary">Dashboard</button></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/users/logout"><button class="btn btn-secondary">Log Out</button></a>
+        </li>
+      </ul>
+
+      <form action="/products" method="post" class="form-inline"><label for="name">
+          <input class="form-control mr-sm-2" type="text" placeholder="Name" name="name">
+          <input class="form-control mr-sm-2" type="text" placeholder="Number" name="number">
+
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+      {{else}}
+
+      <!-- If user is not signed in then the about link is displayed -->
+
+      <a class="btn btn-secondary text-white" href="/about">About</a>
+      <a class="btn btn-secondary text-white" href="https://github.com/daveryde/RosterApp-hbs">Github</a>
+      {{/if}}
   </nav>
 </div>
