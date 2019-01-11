@@ -22,7 +22,7 @@ Deployed using - [Heroku](https://www.heroku.com/)
 
 #*Stack* - MongoDB, Express, Handlebars, nodeJS. 
 
-#*Dependencies* - "passport", "jsonwebtoken", bcryptjs", "body-parser", "express", "express-handlebars", "method-override", "mongoose"
+#*Dependencies* - "passport", "passport-local", "bcryptjs", "body-parser", "express", "express-session", "express-handlebars", "method-override", "mongoose", "connect-flash"
 
 ## Authors
 
