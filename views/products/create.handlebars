@@ -1,20 +1,27 @@
-<div class="container">
-  {{#if product}}
-  {{#each product}}
-  <div class="row">
-    {{> figure}}
-  </div>
-  {{/each}}
-  {{else}}
-  <div class="row">
-    <div class="col-md-12 text-center">
-      <p class="display-4">No images in your roster</p>
-      <p class="lead">Trying adding images using the top navigation bar!</p>
-    </div>
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <form action="/products/dashboard/roster/{{user.id}}" method="post">
+      <fieldset>
+        <legend class="text-center">{{title}}</legend>
+        <div class="form-group">
+          <label for="inputTitle">Title</label>
+          <input type="text" class="form-control" id="inputTitle" placeholder="Title">
+        </div>
+        <div class="form-group">
+          <label for="inputName">Name</label>
+          <input type="name" class="form-control" id="inputName" aria-describedby="emailHelp" placeholder="Enter name">
+          <small id="nameHelp" class="form-text text-muted">This name will be displayed under each picture.</small>
+        </div>
+        <div class="form-group">
+          <label for="inputNumber">Number</label>
+          <input type="text" class="form-control" id="inputNumber" placeholder="6 digit Number">
+        </div>
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </fieldset>
+    </form>
   </div>
 </div>
-{{/if}}
-{{!-- <div class="row">
+<div class="row mt-5">
   <div class="col-md-4">
     <div class="card text-white bg-primary mb-3" style="max-width: 18rem;">
       <div class="card-header">Header</div>
@@ -102,5 +109,12 @@
       </div>
     </div>
   </div>
-
-</div> --}}
+  <div class="col-md-8 mt-4">
+    <p>Right side where pictures go</p>
+    {{#if product}}
+    {{#each product}}
+    {{> figure}}
+    {{/each}}
+    {{/if}}
+  </div>
+</div>

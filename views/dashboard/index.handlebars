@@ -1,14 +1,18 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <h1>Welcome {{user.firstName}}</h1>
-    </div>
-    <div class="col-md-8">
-      <div class="jumbotron-fluid">
-        <p class="lead">This is where the users are directed after they have logged in or clicked on a dashboard link.</p>
-        <a href="dashboard/roster">View Rosters</a>
-        <a href="users/logout">LogOut</a>
+<div class="row mt-4">
+  <div class="col-md-4">
+    <div class="card bg-secondary text-white mb-3">
+      <div class="card-header text-center">Name: {{user.firstName}}</div>
+      <div class="card-body">
+        <h5 class="card-title">Email: {{user.email}}</h5>
+        <p class="card-text">The best person in the world is you, {{user.firstName}}</p>
       </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="jumbotron bg-light text-center">
+      <p class="lead">This is where the users are directed after they have logged in or clicked on a dashboard link.</p>
+      <a href="dashboard/roster" class="btn btn-outline-primary">View Rosters</a>
+      <a href="dashboard/roster/create" class="btn btn-outline-primary">Create Rosters</a>
     </div>
   </div>
 </div>

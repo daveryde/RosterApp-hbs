@@ -3,14 +3,29 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const ProductSchema = new Schema({
-  name: {
-    type: String,
-    required: true
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'user'
   },
-  number: {
-    type: String,
-    required: true
+  title: {
+    type: String
+  },
+  roster: [
+    {
+      name: {
+        type: String,
+        required: true
+      },
+      number: {
+        type: String,
+        required: true
+      }
+    }
+  ],
+  date: {
+    type: Date,
+    default: Date.now
   }
 });
 
-module.exports = mongoose.model('product', ProductSchema);
+module.exports = Product = mongoose.model('product', ProductSchema);
