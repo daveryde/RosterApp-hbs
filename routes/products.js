@@ -139,7 +139,7 @@ router.post('/dashboard/roster', ensureAuthenticated, (req, res) => {
 // @access  Private
 router.post('/:product_id', ensureAuthenticated, (req, res) => {
   // Find user by user id
-  Product.findOne({ user: req.user.id, _id: req.params.product_id })
+  Product.findOne({ _id: req.params.product_id })
     .then(product => {
       // Set the request values to the Product schema
       const newProduct = {
@@ -153,7 +153,7 @@ router.post('/:product_id', ensureAuthenticated, (req, res) => {
       // Save product to the database and redirect to view
       product
         .save()
-        .then(product => res.json(product))
+        .then(product => res.render('products/create', { product }))
         .catch(err => res.json(err));
     })
     .catch(err => res.json(err));
