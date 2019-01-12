@@ -1,0 +1,11 @@
+{{#each product}}
+<div class="col-md-4">
+  <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
+    <div class="card-header">{{title}}</div>
+    <div class="card-body">
+      <h5 class="card-title">Created By: {{user.firstName}}, {{user.lastName}}</h5>
+    </div>
+    <a href="/products/roster/{{id}}" class="btn btn-success">View Roster</a>
+  </div>
+</div>
+{{/each}}

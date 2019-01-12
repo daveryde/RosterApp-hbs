@@ -1,11 +1,11 @@
 <div class='col-sm-4 col-md-4 col-lg-3 mb-2'>
   <div class='card'>
-    <a href='/products/{{id}}'><img class='card-img-top' src="https://apps.azcorrections.gov/mugshots/{{~number}}.jpg"
-        id={{~number}} alt={{~name}}></a>
+    <a href='/products/{{id}}'><img class='card-img-top' src="https://apps.azcorrections.gov/mugshots/{{number}}.jpg"
+        id={{number}} alt={{name}}></a>
     <div class='card-body text-center'>
-      <h4 class='card-title'>{{~name}}</h4>
+      <h4 class='card-title'>{{name}}</h4>
       <p class='card-text'>
-        {{~number}}
+        {{number}}
       </p>
 
       <form action="/products/{{id}}?_method=DELETE" method="post">

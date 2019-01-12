@@ -22,13 +22,6 @@
           <a class="nav-link text-white" href="/users/logout"><button class="btn btn-secondary">Log Out</button></a>
         </li>
       </ul>
-
-      <form action="/dashboard/roster/class/{{user.id}}" method="post" class="form-inline">
-        <input class="form-control mr-sm-2" type="text" placeholder="Name" name="name">
-        <input class="form-control mr-sm-2" type="text" placeholder="Number" name="number">
-
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
       {{else}}
 
       <!-- If user is not signed in then the about link is displayed -->
@@ -36,5 +29,6 @@
       <a class="btn btn-secondary text-white" href="/about">About</a>
       <a class="btn btn-secondary text-white" href="https://github.com/daveryde/RosterApp-hbs">Github</a>
       {{/if}}
+    </div>
   </nav>
 </div>

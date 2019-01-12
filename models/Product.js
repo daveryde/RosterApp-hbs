@@ -8,10 +8,15 @@ const ProductSchema = new Schema({
     ref: 'user'
   },
   title: {
-    type: String
+    type: String,
+    required: true
   },
   roster: [
     {
+      rosterUser: {
+        type: Schema.Types.ObjectId,
+        ref: 'user'
+      },
       name: {
         type: String,
         required: true
