@@ -1,5 +1,6 @@
-<div class="row justify-content-center">
-  <div class="col-md-6">
+{{!-- Roster search and add form section --}}
+<section class="row justify-content-center mt-4 mb-5 print-hidden">
+  <div class="col-md-4">
     <form action="/products/{{product.id}}" method="post">
       <fieldset>
         <div class="form-group">
@@ -9,12 +10,13 @@
         <div class="form-group">
           <input type="text" class="form-control" name="number" id="inputNumber" placeholder="6 digit Number">
         </div>
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-success btn-block my-2 my-sm-0" type="submit">Search</button>
       </fieldset>
     </form>
   </div>
-</div>
+</section>
 
+{{!-- Display roster tiles --}}
 <div class="row">
   {{#each product}}
   {{#each roster}}

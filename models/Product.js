@@ -7,15 +7,14 @@ const ProductSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'user'
   },
-  title: {
-    type: String,
-    required: true
+  program: {
+    type: String
   },
-  roster: [
+  students: [
     {
-      rosterUser: {
+      user: {
         type: Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'profile'
       },
       name: {
         type: String,

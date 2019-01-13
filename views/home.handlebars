@@ -31,34 +31,85 @@
   </div>
 </section>
 {{/if}}
+
+{{!-- Display section is user is not logged in --}}
+{{#if user}}
+
+{{else}}
 <section class="container">
-  <div class="row mt-5">
-    <div class="col-md-4 mb-4">
+  <div class="row align-items-center mt-5 mb-4">
+
+    <div class="col-md-4">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">A Registered Users Sample Roster</h5>
           <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Check It Out</a>
+          <div class="row justify-content-center">
+            <a href="#" class="btn btn-primary">Check It Out</a>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-4 mb-4">
+
+    <div class="col-md-8">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">A Registered Users Sample Roster</h5>
-          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Check It Out</a>
+          <div class="card-text">
+            <p class="text-center">Information about this registered user sample roster</p>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-md-4 mb-4">
+
+  </div>
+  <div class="row align-items-center mt-2 mb-4">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text">
+            <p class="text-center">Information about this registered user sample roster</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">A Registered Users Sample Roster</h5>
           <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="btn btn-primary">Check It Out</a>
+          <div class="row justify-content-center">
+            <a href="#" class="btn btn-primary">Check It Out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="row align-items-center mt-2 mb-4">
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">A Registered Users Sample Roster</h5>
+          <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+          <div class="row justify-content-center">
+            <a href="#" class="btn btn-primary">Check It Out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text">
+            <p class="text-center">Information about this registered user sample roster</p>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+{{/if}}

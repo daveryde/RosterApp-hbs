@@ -3,46 +3,20 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const { ensureAuthenticated } = require('../helpers/hbs');
 
-// Load the product model
+// Load the product and user model
 const Product = require('../models/Product');
-
-// @route   GET /products/dashboard
-// @desc    Product Dashboard Route
-// @access  Private
-router.get('/dashboard', ensureAuthenticated, (req, res) => {
-  Product.find()
-    .populate('user')
-    .then(product => {
-      res.status(200);
-      res.render('dashboard/index', { product });
-    })
-    .catch(err => {
-      res.status(404).json(err);
-    });
-});
 
 // @route   GET /products/dashboard/roster
 // @desc    Display all rosters list route
 // @access  Private
 router.get('/dashboard/roster', ensureAuthenticated, (req, res) => {
-  Product.find()
-    .populate('user', ['roster'])
+  Product.find({ user: req.user.id })
+    .populate('user')
     .then(product => {
-      res.status(200);
-      res.json({ product });
-    })
-    .catch(err => {
-      res.status(404).json(err);
-    });
-});
-
-// @route   GET /products/dashboard/roster
-// @desc    Display the users list of rosters route
-// @access  Public
-router.get('/roster/user/:id', (req, res) => {
-  Product.findById({ _id: req.params.id })
-    .then(product => {
-      res.status(200).json(product);
+      console.log(product);
+      res.render('dashboard/index', {
+        product: product
+      });
     })
     .catch(err => {
       res.status(404).json(err);
@@ -59,40 +33,50 @@ router.get('/dashboard/roster/create', ensureAuthenticated, (req, res) => {
 // @route   GET /products/dashboard/roster/class/:id/roster_id
 // @desc    Class specific roster route
 // @access  Private
-router.get(
-  '/dashboard/roster/:id/:roster_id',
-  ensureAuthenticated,
-  (req, res) => {
-    // Find the product by request id and render to view
-    Product.findById({ _id: req.params.id })
-      .then(product => {
-        if (
-          product.roster.filter(
-            roster => roster._id.toString() === req.params.roster_id
-          ).length === 0
-        ) {
-          return res.status(404).json({ rosternotexist: 'No roster to show' });
-        }
+router.get('/dashboard/roster/:roster_id', ensureAuthenticated, (req, res) => {
+  // Find the product by request id and render to view
+  Product.findById({ _id: req.params.id })
+    .then(product => {
+      if (
+        product.roster.filter(
+          roster => roster._id.toString() === req.params.roster_id
+        ).length === 0
+      ) {
+        return res.status(404).json({ rosternotexist: 'No roster to show' });
+      }
 
-        if (
-          product.roster.filter(
-            roster => roster._id.toString() === req.params.roster_id
-          ).length === 1
-        ) {
-          const result = product.roster.map(item => {
-            return item;
-          });
-          return res.status(200).json({ result });
-        }
-      })
-      .catch(err => {
-        res.status(500);
-        res.render({
-          error: err
+      if (
+        product.roster.filter(
+          roster => roster._id.toString() === req.params.roster_id
+        ).length === 1
+      ) {
+        const result = product.roster.map(item => {
+          return item;
         });
+        return res.status(200).json({ result });
+      }
+    })
+    .catch(err => {
+      res.status(500);
+      res.render({
+        error: err
       });
-  }
-);
+    });
+});
+
+// @route   GET /products/dashboard/roster
+// @desc    Display the users list of rosters route
+// @access  Public
+router.get('/roster/user/:id', (req, res) => {
+  Product.findById({ _id: req.params.id })
+    .populate('user')
+    .then(product => {
+      res.status(200).json(product);
+    })
+    .catch(err => {
+      res.status(404).json(err);
+    });
+});
 
 // @route   GET /products/dashboard/roster/class/:id/:user_id
 // @desc    Class specific roster route
@@ -100,7 +84,7 @@ router.get(
 router.get('/roster/:id', ensureAuthenticated, (req, res) => {
   // Find the product by request id and render to view
   Product.findById({ _id: req.params.id })
-    .populate('user', ['title', 'roster'])
+    .populate('user')
     .then(product => {
       if (!product) {
         res.status(404).json({ doesnotexist: 'No roster with that id' });
@@ -119,16 +103,16 @@ router.get('/roster/:id', ensureAuthenticated, (req, res) => {
 // @desc    Class specific roster add product route
 // @access  Private
 router.post('/dashboard/roster', ensureAuthenticated, (req, res) => {
+  // Find the user in the database
   const rosterAdd = new Product({
-    title: req.body.title,
-    roster: [],
-    user: req.user.id
+    user: req.user.id,
+    program: req.body.program
   });
 
   // Save to the database
   rosterAdd
     .save()
-    .then(product => res.render('products/create', { product }))
+    .then(() => res.redirect('/dashboard/roster'))
     .catch(err => {
       res.status(500).json(err);
     });
@@ -144,7 +128,8 @@ router.post('/:product_id', ensureAuthenticated, (req, res) => {
       // Set the request values to the Product schema
       const newProduct = {
         name: req.body.name,
-        number: req.body.number
+        number: req.body.number,
+        rosterUser: req.user.id
       };
 
       // Add to roster array
@@ -162,7 +147,7 @@ router.post('/:product_id', ensureAuthenticated, (req, res) => {
 // @route   DELETE /products/:id
 // @desc    Product deleted route
 // @access  Private
-router.delete('/:id', ensureAuthenticated, (req, res) => {
+router.delete('/roster/:id', ensureAuthenticated, (req, res) => {
   // Find product in database by id, then delete and redirect to view
   Product.deleteOne({ _id: req.params.id })
     .then(() => {
@@ -177,30 +162,32 @@ router.delete('/:id', ensureAuthenticated, (req, res) => {
 // @route   DELETE /products/:id
 // @desc    Product roster deleted route
 // @access  Private
-router.delete('/:id/:roster_id', ensureAuthenticated, (req, res) => {
+router.delete('/:roster_id', ensureAuthenticated, (req, res) => {
   // Find product in database by id, then delete and redirect to view
-  Product.findById({ _id: req.params.id }).then(product => {
-    if (
-      product.roster.filter(
-        roster => roster._id.toString() === req.params.roster_id
-      ).length === 0
-    ) {
-      return res.status(404).json({ rosternotexist: 'Roster does not exist' });
-    }
+  Product.findOne({ user: req.user.id })
+    .then(product => {
+      if (
+        product.roster.filter(
+          roster => roster._id.toString() === req.params.roster_id
+        ).length === 0 &&
+        req.user.id === _id
+      ) {
+        req.flash('error_msg', 'Unauthorized');
+      }
+      // Get remove index
+      const removeIndex = product.roster
+        .map(item => item._id.toString())
+        .indexOf(req.params.roster_id);
 
-    // Get remove index
-    const removeIndex = product.roster
-      .map(item => item._id.toString())
-      .indexOf(req.params.roster_id);
+      // Splice roster out of array
+      product.roster.splice(removeIndex, 1);
 
-    // Splice roster out of array
-    product.roster.splice(removeIndex, 1);
-
-    product
-      .save()
-      .then(roster => res.json(roster))
-      .catch(err => res.json(err));
-  });
+      product
+        .save()
+        .then(() => res.redirect('/dashboard/roster'))
+        .catch(err => res.json(err));
+    })
+    .catch(err => res.json(err));
 });
 
 module.exports = router;

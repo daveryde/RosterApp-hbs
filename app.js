@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 // Load routes
 const products = require('./routes/products');
 const users = require('./routes/users');
+const profiles = require('./routes/profile');
 
 // Passport Config
 require('./config/passport')(passport);
@@ -36,10 +37,16 @@ mongoose
   .then(() => console.log('MongoDB Connected...'))
   .catch(err => console.log(err));
 
+const { formatDate, isAuthor } = require('./helpers/hbs');
+
 // Load Handlebars middleware
 app.engine(
   'handlebars',
   exphbs({
+    helpers: {
+      formatDate,
+      isAuthor
+    },
     defaultLayout: 'main'
   })
 );
@@ -88,6 +95,7 @@ app.get('/about', (req, res) => {
 
 app.use('/products', products);
 app.use('/users', users);
+app.use('/profiles', profiles);
 
 const port = process.env.PORT || 3000;
 

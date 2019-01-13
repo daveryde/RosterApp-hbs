@@ -1,11 +1,28 @@
 {{#each product}}
+{{!-- List of each roster --}}
 <div class="col-md-4">
-  <div class="card text-white bg-warning mb-3" style="max-width: 18rem;">
-    <div class="card-header">{{title}}</div>
+
+  <div class="card text-white bg-warning mb-3 shadow-lg" style="max-width: 18rem;">
+    <div class="card-header text-center">{{product.title}}</div>
     <div class="card-body">
       <h5 class="card-title">Created By: {{user.firstName}}, {{user.lastName}}</h5>
+      <h6 class="card-subtitle mb-2 text-muted">Last Edited: {{formatDate date 'MMMM Do YYYY'}}</h6>
+      {{!-- {{isAuthor id user.id}}
+      {{#roster}}
+      <p>Roster ID: {{id}}</p>
+      {{/roster}}
+      <p>User ID: {{user.id}}</p> --}}
+      {{!-- Delete button --}}
+      <div class="row justify-content-around">
+        <form action="/products/roster/{{id}}?_method=DELETE" method="post">
+          <input type="hidden" name="_method" value="DELETE">
+          <button type="submit" class="btn btn-danger btn-block print-hidden">
+            Delete</button>
+        </form>
+        <a href="/products/roster/{{id}}" class="btn btn-success">View Roster</a>
+      </div>
     </div>
-    <a href="/products/roster/{{id}}" class="btn btn-success">View Roster</a>
   </div>
+
 </div>
 {{/each}}

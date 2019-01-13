@@ -3,9 +3,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const router = express.Router();
+const { ensureAuthenticated } = require('../helpers/hbs');
 
-require('../models/User');
-const User = mongoose.model('user');
+const User = require('../models/User');
 
 // Redirect to login user route
 router.get('/login', (req, res) => {
@@ -17,10 +17,25 @@ router.get('/register', (req, res) => {
   res.render('users/register');
 });
 
+// @route   GET /products/dashboard
+// @desc    Product Dashboard Route
+// @access  Private
+router.get('/dashboard', ensureAuthenticated, (req, res) => {
+  User.find({ id: req.user.id })
+    .populate('product')
+    .then(product => {
+      res.status(200);
+      res.render('dashboard/index', { product });
+    })
+    .catch(err => {
+      res.status(404).json(err);
+    });
+});
+
 // Login Form POST
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
-    successRedirect: '/products/dashboard',
+    successRedirect: '/users/dashboard',
     failureRedirect: '/users/login',
     failureFlash: true
   })(req, res, next);
@@ -75,7 +90,7 @@ router.post('/register', (req, res) => {
                   'success_msg',
                   'You are now registered and can log in!'
                 );
-                res.redirect('/products');
+                res.redirect('/products/dashboard/roster');
               })
               .catch(err => {
                 console.log(err);
@@ -103,6 +118,15 @@ router.get('/', (req, res) => {
     .catch(err => {
       res.status(404).json(err);
     });
+});
+
+// Delete User
+router.delete('/delete', (req, res) => {
+  User.findOneAndDelete({ _id: req.user.id })
+    .then(user => res.json({ success: 'User was removed from the database' }))
+    .catch(err =>
+      res.json({ failure: 'Could not find the user in the database' })
+    );
 });
 
 module.exports = router;

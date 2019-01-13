@@ -1,0 +1,17 @@
+<div class="col-md-12">
+  <h1>Create a Profile</h1>
+</div>
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    {{!-- Create Profile Form --}}
+    <form action="/profiles/add" method="post">
+      <div class="form-group">
+        <input type="text" name="handle" class="form-control" id="handle" placeholder="alias or nickname">
+      </div>
+      <div class="form-group">
+        <input type="text" name="title" class="form-control" id="title" placeholder="title">
+      </div>
+      <button type="submit" class="btn btn-light">Submit</button>
+    </form>
+  </div>
+</div>
