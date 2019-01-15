@@ -55,14 +55,24 @@ router.post('/add', ensureAuthenticated, (req, res) => {
     title: req.body.title
   };
 
-  // If no user, then create one
-  new Profile(profileFields)
-    .save()
-    .then(() => {
-      req.flash('success_msg', 'Profile successfully created!');
-      res.redirect('/users/dashboard');
-    })
-    .catch(err => res.json(err));
+  Profile.find({ user: req.user.id }).then(profile => {
+    if (profile.handle) {
+      Profile.findOneAndUpdate(
+        { user: req.user.id },
+        { $set: profileFields },
+        { new: true }
+      );
+    } else {
+      // If no user, then create one
+      new Profile(profileFields)
+        .save()
+        .then(() => {
+          req.flash('success_msg', 'Profile successfully created!');
+          res.redirect('/users/dashboard');
+        })
+        .catch(err => res.json(err));
+    }
+  });
 });
 
 router.post('/add/roster', ensureAuthenticated, (req, res) => {
@@ -82,18 +92,35 @@ router.post('/add/roster', ensureAuthenticated, (req, res) => {
   });
 });
 
-router.put('/edit/', (req, res) => {
-  Profile.findOne({ user: req.user.id })
-    .then(profile => {
-      profile.title = req.body.title;
-      profile.handle = req.body.handle;
+router.post('/edit/:id', (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    profile.handle = req.body.handle;
+    profile.title = req.body.title;
 
-      profile.save().then(() => {
-        req.flash('success_msg', 'Profile successfully updated');
-        res.redirect('/users/dashboard');
-      });
-    })
-    .catch(err => res.json(err));
+    profile.save().then(profile => {
+      req.flash('success_msg', 'Profile successfully updated');
+      res.redirect('/user/dashboard');
+    });
+  });
+});
+
+router.put('/edit/roster/:id', (req, res) => {
+  Profile.findOneAndUpdate({ id: req.params.id });
+});
+
+router.delete('/roster/:id', (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    // Get remove index
+    const removeIndex = profile.roster
+      .map(item => item.id)
+      .indexOf(req.params.id);
+
+    // Splice out of array
+    profile.roster.splice(removeIndex, 1);
+
+    // Save
+    profile.save().then(profile => res.redirect('/users/dashboard'));
+  });
 });
 
 router.delete('/:id', (req, res) => {

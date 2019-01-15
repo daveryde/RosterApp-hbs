@@ -1,21 +1,20 @@
 {{!-- Roster search and add form section --}}
 {{#profile}}
+
 <section class="row justify-content-center mt-4 mb-5 print-hidden">
   <div class="col-md-4">
     <form action="/profiles/add/roster/" method="post">
       <fieldset>
         <div class="form-group">
-          <input type="title" class="form-control" name="title" id="inputName" aria-describedby="emailHelp" placeholder="Enter class name"
-            value={{roster.title}}>
+          <input type="title" class="form-control" name="title" id="inputName" aria-describedby="emailHelp" value={{title}}>
           <small id="nameHelp" class="form-text text-muted">This name will be displayed under each picture.</small>
         </div>
         <div class="form-group">
-          <input type="name" class="form-control" name="name" id="inputName" aria-describedby="emailHelp" placeholder="Enter name"
-            value={{roster.name}}>
+          <input type="name" class="form-control" name="name" id="inputName" aria-describedby="emailHelp" placeholder="Enter Name">
           <small id="nameHelp" class="form-text text-muted">This name will be displayed under each picture.</small>
         </div>
         <div class="form-group">
-          <input type="text" class="form-control" name="number" id="inputNumber" placeholder="6 digit Number" value={{roster.number}}>
+          <input type="text" class="form-control" name="number" id="inputNumber" placeholder="Enter ID Number">
         </div>
         <button class="btn btn-outline-success btn-block my-2 my-sm-0" type="submit">Search</button>
       </fieldset>
@@ -28,7 +27,6 @@
   {{#each roster}}
   {{> figure}}
   {{/each}}
-</div>
 </div>
 {{/profile}}
 

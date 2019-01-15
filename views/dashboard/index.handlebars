@@ -12,13 +12,15 @@
               <p class="card-text">This message was tailored specifically to you, {{user.firstName}}. We think you're
                 awesome
                 and want to thank you for supporting the team!</p>
-              <a href="/profiles/edit/{{user.id}}" class="btn btn-light">Edit Profile</a>
+              <div class="row justify-content-center">
+                <a href="/profiles/edit/{{user.id}}" class="btn btn-light">Edit Profile</a>
+              </div>
             </div>
           </div>
         </div>
         {{!-- Jumbotron landing --}}
         <div class="col-md-7">
-          <div class="jumbotron bg-info text-center">
+          <div class="jumbotron bg-info text-center text-white">
             {{#profile}}
             <p class="lead">
               <span class="font-weight-bold">Hey, {{handle}}!</span>
@@ -34,4 +36,5 @@
   </div>
 </div>
 {{!-- Roster Titles --}}
+{{!-- Display tiles if user has created a roster --}}
 {{> rostertiles}}
