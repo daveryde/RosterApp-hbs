@@ -15,7 +15,9 @@
                 <button type="submit" class="btn btn-danger btn-block print-hidden">
                   Delete</button>
               </form>
-              <a href="/products/roster/{{id}}" class="btn btn-success">View Roster</a>
+              {{#roster}}
+              <a href="/profiles/findRoster/{{id}}" class="btn btn-success">View Roster</a>
+              {{/roster}}
             </div>
           </div>
         </div>

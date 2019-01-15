@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 // Load routes
 const users = require('./routes/users');
-const profiles = require('./routes/profile');
+const profiles = require('./routes/profiles');
 
 // Passport Config
 require('./config/passport')(passport);

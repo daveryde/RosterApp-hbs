@@ -110,7 +110,7 @@ router.get('/logout', (req, res) => {
 
 // Get users
 router.get('/all', (req, res) => {
-  Product.find({ user: req.user.id })
+  Profile.find({ user: req.user.id })
     .populate('product')
     .then(users => {
       res.status(200).json(users);

@@ -11,6 +11,12 @@ router.get('/createProfile', (req, res) => {
   });
 });
 
+router.get('/createRoster', (req, res) => {
+  Profile.find({ user: req.user.id }).then(profile => {
+    res.render('roster/create', { profile });
+  });
+});
+
 router.get('/my', (req, res) => {
   Profile.find({ user: req.user.id })
     .then(profile => {
@@ -22,10 +28,17 @@ router.get('/my', (req, res) => {
     });
 });
 
-router.get('/find', (req, res) => {
-  Profile.find().then(profiles => {
-    res.status(200).json(profiles);
-  });
+router.get('/findRoster/:id', (req, res) => {
+  Profile.find({ user: req.user.id })
+    .populate('user')
+    .then(profile => {
+      if (profile) {
+        res.status(200).render('roster/create', { profile });
+      }
+      // const rosterIndex = profile.roster
+      //   .map(roster => roster.id.toString())
+      //   .indexOf(req.params.id);
+    });
 });
 
 router.get('/edit/:id', (req, res) => {
@@ -50,6 +63,23 @@ router.post('/add', ensureAuthenticated, (req, res) => {
       res.redirect('/users/dashboard');
     })
     .catch(err => res.json(err));
+});
+
+router.post('/add/roster', ensureAuthenticated, (req, res) => {
+  Profile.findOne({ user: req.user.id }).then(profile => {
+    const newRoster = {
+      user: req.user.id,
+      name: req.body.name,
+      number: req.body.number,
+      title: req.body.title
+    };
+
+    profile.roster.push(newRoster);
+
+    profile.save().then(profile => {
+      res.redirect('/profiles/createRoster');
+    });
+  });
 });
 
 router.put('/edit/', (req, res) => {
