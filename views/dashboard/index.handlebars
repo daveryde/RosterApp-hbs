@@ -1,29 +1,45 @@
-<div class="row mt-4">
-  <div class="col-md-4">
-    <div class="card bg-secondary text-white mb-3">
-      <div class="card-header text-center">Name: {{user.firstName}}</div>
-      <div class="card-body">
-        <h5 class="card-title">Email: {{user.email}}</h5>
-        <p class="card-text">This message was tailored specifically to you, {{user.firstName}}. We think you're awesome
-          and want to thank you for supporting the team!</p>
-        <a href="/profiles/createProfile" class="btn btn-light">Create Your Profile</a>
+{{!-- User dashboard landing page --}}
+<div class="row mt-4 align-items-center justify-content-around">
+  <div class="col-md-12">
+    <div class="jumbotron bg-secondary">
+      <div class="row mt-4 align-items-center justify-content-around">
+        {{!-- User card info message --}}
+        <div class="col-md-5">
+          <div class="card bg-info text-white mb-3">
+            <div class="card-header text-center">Name: {{user.firstName}}</div>
+            <div class="card-body">
+              <h5 class="card-title">Email: {{user.email}}</h5>
+              <p class="card-text">This message was tailored specifically to you, {{user.firstName}}. We think you're
+                awesome
+                and want to thank you for supporting the team!</p>
+              <a href="/profiles/edit/{{user.id}}" class="btn btn-light">Edit Profile</a>
+            </div>
+          </div>
+        </div>
+        {{!-- Jumbotron landing --}}
+        <div class="col-md-7">
+          <div class="jumbotron bg-info text-center">
+            {{#profile}}
+            <p class="lead">
+              <span class="font-weight-bold">Hey, {{handle}}!</span>
+            </p>
+            {{/profile}}
+            <p class="lead">Welcome to your personalized dashboard. Edit your profile or start making rosters!</p>
+            {{!-- Create Roster Form --}}
+            <form action="/products/dashboard/roster/" method="post">
+              <div class="form-inline justify-content-center">
+                <fieldset>
+                  <div class="form-group">
+                    <input type="text" class="form-control mr-2" name="title" id="inputTitle" placeholder="Title">
+                    <button class="btn btn-success">Create Rosters</button>
+                  </div>
+                </fieldset>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-8">
-    <div class="jumbotron bg-info text-center">
-      <p class="lead">This is where the users are directed after they have logged in or clicked on a dashboard link.</p>
-      <form action="/products/dashboard/roster/" method="post">
-        <div class="form-inline justify-content-center">
-          <fieldset>
-            <legend class="text-center">{{program}}</legend>
-            <div class="form-group">
-              <input type="text" class="form-control mr-2" name="title" id="inputTitle" placeholder="Title">
-              <button class="btn btn-success">Create Rosters</button>
-            </div>
-          </fieldset>
-      </form>
-    </div>
-  </div>
 </div>
+{{!-- Roster Titles --}}
 {{> rostertiles}}

@@ -1,5 +1,5 @@
-<div class="container-fluid">
-  <nav class="navbar navbar-expand-lg navbar-light bg-secondary shadow mt-2 mb-2">
+<nav class="navbar navbar-expand-lg navbar-light bg-secondary shadow mt-2 mb-2">
+  <div class="container">
     <a href="/" class="navbar-brand">
       <h3 class="text-white"><i class="fas fa-list-alt"></i>
         <span class="ml-2">Roster App</span></h3>
@@ -7,31 +7,44 @@
 
     {{#if user}}
 
-    <!-- If user is signed in, links and search form are displayed -->
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
-      aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+    {{!-- If user is signed in, links and search form are displayed --}}
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#usermenu" aria-controls="usermenu"
+      aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
-      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+    <div class="collapse navbar-collapse" id="usermenu">
+      <ul class="navbar-nav m-auto mt-2 mt-lg-0">
         <li class="nav-item active">
           <a class="nav-link text-white" href="/profiles/my"><button class="btn btn-secondary">My Profile</button></a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link text-white" href="/products/dashboard"><button class="btn btn-secondary">Dashboard</button></a>
+          <a class="nav-link text-white" href="/users/dashboard"><button class="btn btn-secondary">Dashboard</button></a>
         </li>
         <li class="nav-item">
           <a class="nav-link text-white" href="/users/logout"><button class="btn btn-secondary">Log Out</button></a>
         </li>
       </ul>
-      {{else}}
+    </div>
+    {{else}}
+    {{!-- If user not signed in, about and source are displayed --}}
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#guestmenu" aria-controls="guestmenu"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-      <!-- If user is not signed in then the about link is displayed -->
+    <div class="collapse navbar-collapse" id="guestmenu">
 
-      <a class="btn btn-secondary text-white" href="/about">About</a>
-      <a class="btn btn-secondary text-white" href="https://github.com/daveryde/RosterApp-hbs">Github</a>
+      {{!-- If user is not signed in then the about link is displayed --}}
+      <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+        <li class="nav-item active">
+          <a href="/about"><button class="btn btn-secondary text-white">About</button>
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a href="https://github.com/daveryde/RosterApp-hbs"><button class="btn btn-secondary text-white">Code</button></a>
+        </li>
+      </ul>
       {{/if}}
     </div>
-  </nav>
-</div>
+</nav>

@@ -1,11 +1,11 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const router = express.Router();
 const { ensureAuthenticated } = require('../helpers/hbs');
 
 const User = require('../models/User');
+const Profile = require('../models/Profile');
 
 // Redirect to login user route
 router.get('/login', (req, res) => {
@@ -21,11 +21,10 @@ router.get('/register', (req, res) => {
 // @desc    Product Dashboard Route
 // @access  Private
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
-  User.find({ id: req.user.id })
-    .populate('product')
-    .then(product => {
-      res.status(200);
-      res.render('dashboard/index', { product });
+  Profile.find({ user: req.user.id })
+    .populate('user', ['firstName', 'lastName'])
+    .then(profile => {
+      res.render('dashboard/index', { profile });
     })
     .catch(err => {
       res.status(404).json(err);
@@ -85,12 +84,12 @@ router.post('/register', (req, res) => {
             newUser.password = hash;
             newUser
               .save()
-              .then(user => {
+              .then(() => {
                 req.flash(
                   'success_msg',
                   'You are now registered and can log in!'
                 );
-                res.redirect('/products/dashboard/roster');
+                res.redirect('/users/dashboard');
               })
               .catch(err => {
                 console.log(err);
@@ -110,8 +109,9 @@ router.get('/logout', (req, res) => {
 });
 
 // Get users
-router.get('/', (req, res) => {
-  User.find()
+router.get('/all', (req, res) => {
+  Product.find({ user: req.user.id })
+    .populate('product')
     .then(users => {
       res.status(200).json(users);
     })
@@ -123,8 +123,8 @@ router.get('/', (req, res) => {
 // Delete User
 router.delete('/delete', (req, res) => {
   User.findOneAndDelete({ _id: req.user.id })
-    .then(user => res.json({ success: 'User was removed from the database' }))
-    .catch(err =>
+    .then(() => res.json({ success: 'User was removed from the database' }))
+    .catch(() =>
       res.json({ failure: 'Could not find the user in the database' })
     );
 });

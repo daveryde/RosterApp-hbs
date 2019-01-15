@@ -1,21 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const passport = require('passport');
 const { ensureAuthenticated } = require('../helpers/hbs');
 
 const User = require('../models/User');
 const Profile = require('../models/Profile');
 
 router.get('/createProfile', (req, res) => {
-  res.render('dashboard/createProfile');
+  Profile.find({ user: req.user.id }).then(profile => {
+    res.render('dashboard/createProfile', { profile });
+  });
 });
 
 router.get('/my', (req, res) => {
   Profile.find({ user: req.user.id })
-    .populate('user')
     .then(profile => {
       res.render('dashboard/myprofile', { profile });
+    })
+    .catch(() => {
+      req.flash('error_msg', 'Please setup your profile first');
+      res.redirect('/users/dashboard');
     });
 });
 
@@ -25,43 +28,45 @@ router.get('/find', (req, res) => {
   });
 });
 
+router.get('/edit/:id', (req, res) => {
+  Profile.findOne({ user: req.params.id }).then(profile => {
+    res.render('dashboard/createProfile', { profile });
+  });
+});
+
 router.post('/add', ensureAuthenticated, (req, res) => {
   // Get user inputs
-  const profileFields = {};
-  profileFields.user = req.user.id;
-  if (profileFields.handle) profileFields.handle = req.body.handle;
-  if (profileFields.title) profileFields.title = req.body.title;
-  console.log(profileFields);
+  const profileFields = {
+    user: req.user.id,
+    handle: req.body.handle,
+    title: req.body.title
+  };
 
-  Profile.findOne({ user: req.user.id })
-    .then(user => {
-      // Update user if user exists
-      if (user) {
-        Profile.findOneAndUpdate({
-          user: req.user.id,
-          $set: profileFields,
-          new: true
-        }).then(profile => res.json(profile));
-      } else {
-        // Check handle to prevent duplicate handles
-        Profile.findOne({ handle: profileFields.handle }).then(profile => {
-          if (profile) {
-            req.flash('error_msg', 'Handle is already in use. :(');
-            res.status(400).json({ handleerror: 'Handle is already in use' });
-          }
-
-          // If no user, then create one
-          new Profile(profileFields).save().then(profile => {
-            req.flash('success_msg', 'Profile successfully created!');
-            res.redirect('/products/dashboard/roster');
-          });
-        });
-      }
+  // If no user, then create one
+  new Profile(profileFields)
+    .save()
+    .then(() => {
+      req.flash('success_msg', 'Profile successfully created!');
+      res.redirect('/users/dashboard');
     })
     .catch(err => res.json(err));
 });
 
-router.get('/:id', (req, res) => {
+router.put('/edit/', (req, res) => {
+  Profile.findOne({ user: req.user.id })
+    .then(profile => {
+      profile.title = req.body.title;
+      profile.handle = req.body.handle;
+
+      profile.save().then(() => {
+        req.flash('success_msg', 'Profile successfully updated');
+        res.redirect('/users/dashboard');
+      });
+    })
+    .catch(err => res.json(err));
+});
+
+router.delete('/:id', (req, res) => {
   Profile.findOneAndRemove({ user: req.user.id })
     .then(() => {
       User.findOneAndRemove({ _id: req.user.id }).then(() => {

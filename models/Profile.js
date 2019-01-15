@@ -7,10 +7,12 @@ const ProfileSchema = new Schema({
     ref: 'user'
   },
   handle: {
-    type: String
+    type: String,
+    require: true
   },
   title: {
-    type: String
+    type: String,
+    required: true
   },
   public: {
     type: Boolean,
@@ -18,8 +20,22 @@ const ProfileSchema = new Schema({
   },
   roster: [
     {
-      type: Schema.Types.ObjectId,
-      ref: 'product'
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'profile'
+      },
+      name: {
+        type: String,
+        required: true
+      },
+      number: {
+        type: String,
+        required: true
+      },
+      date: {
+        type: Date,
+        default: Date.now
+      }
     }
   ]
 });

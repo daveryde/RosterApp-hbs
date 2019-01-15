@@ -16,7 +16,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Load routes
-const products = require('./routes/products');
 const users = require('./routes/users');
 const profiles = require('./routes/profile');
 
@@ -93,7 +92,6 @@ app.get('/about', (req, res) => {
   res.render('home');
 });
 
-app.use('/products', products);
 app.use('/users', users);
 app.use('/profiles', profiles);
 
