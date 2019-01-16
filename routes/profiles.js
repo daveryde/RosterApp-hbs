@@ -2,25 +2,36 @@ const express = require('express');
 const router = express.Router();
 const { ensureAuthenticated } = require('../helpers/hbs');
 
-const User = require('../models/User');
+const Student = require('../models/Student');
 const Profile = require('../models/Profile');
 
-router.get('/createProfile', (req, res) => {
+// @route   GET /profiles/createProfile
+// @desc    Find profile and display profile edit page
+// @access  Private
+router.get('/createProfile', ensureAuthenticated, (req, res) => {
   Profile.find({ user: req.user.id }).then(profile => {
-    res.render('dashboard/createProfile', { profile });
+    res.render('profile/createProfile', { profile });
   });
 });
 
-router.get('/createRoster', (req, res) => {
-  Profile.find({ user: req.user.id }).then(profile => {
-    res.render('roster/create', { profile });
-  });
+// @route   GET /profiles/createRoster
+// @desc    Find profile and display roster add page
+// @access  Private
+router.get('/createRoster', ensureAuthenticated, (req, res) => {
+  Student.find({ user: req.user.id })
+    .populate('user', ['-password'])
+    .then(profile => {
+      res.render('roster/add', { profile });
+    });
 });
 
-router.get('/my', (req, res) => {
+// @route   GET /profile/my
+// @desc    Find profile and display user profile details page
+// @access  Private
+router.get('/my', ensureAuthenticated, (req, res) => {
   Profile.find({ user: req.user.id })
     .then(profile => {
-      res.render('dashboard/myprofile', { profile });
+      res.render('profile/myprofile', { profile });
     })
     .catch(() => {
       req.flash('error_msg', 'Please setup your profile first');
@@ -28,25 +39,31 @@ router.get('/my', (req, res) => {
     });
 });
 
+// @route   GET /profiles/findRoster
+// @desc    Find profile and display student info
+// @access  Private
 router.get('/findRoster/:id', (req, res) => {
-  Profile.find({ user: req.user.id })
-    .populate('user')
+  Student.find({ user: req.params.id })
+    .populate('user', ['-password'])
     .then(profile => {
       if (profile) {
-        res.status(200).render('roster/create', { profile });
+        res.render('roster/add', { profile });
       }
-      // const rosterIndex = profile.roster
-      //   .map(roster => roster.id.toString())
-      //   .indexOf(req.params.id);
     });
 });
 
-router.get('/edit/:id', (req, res) => {
+// @route   GET /profile/edit/:id
+// @desc    Find profile by id and display edit details page
+// @access  Private
+router.get('/edit/:id', ensureAuthenticated, (req, res) => {
   Profile.findOne({ user: req.params.id }).then(profile => {
-    res.render('dashboard/createProfile', { profile });
+    res.render('profile/createProfile', { profile });
   });
 });
 
+// @route   POST /profiles/add
+// @desc    Create/edit profile and redirect to dashboard
+// @access  Private
 router.post('/add', ensureAuthenticated, (req, res) => {
   // Get user inputs
   const profileFields = {
@@ -75,41 +92,11 @@ router.post('/add', ensureAuthenticated, (req, res) => {
   });
 });
 
-router.post('/add/roster', ensureAuthenticated, (req, res) => {
-  Profile.findOne({ user: req.user.id }).then(profile => {
-    const newRoster = {
-      user: req.user.id,
-      name: req.body.name,
-      number: req.body.number,
-      title: req.body.title
-    };
-
-    profile.roster.push(newRoster);
-
-    profile.save().then(profile => {
-      res.redirect('/profiles/createRoster');
-    });
-  });
-});
-
-router.post('/edit/:id', (req, res) => {
-  Profile.findOne({ user: req.user.id }).then(profile => {
-    profile.handle = req.body.handle;
-    profile.title = req.body.title;
-
-    profile.save().then(profile => {
-      req.flash('success_msg', 'Profile successfully updated');
-      res.redirect('/user/dashboard');
-    });
-  });
-});
-
-router.put('/edit/roster/:id', (req, res) => {
-  Profile.findOneAndUpdate({ id: req.params.id });
-});
-
-router.delete('/roster/:id', (req, res) => {
-  Profile.findOne({ user: req.user.id }).then(profile => {
+// @route   DELETE /profiles/roster/:id
+// @desc    Remove roster from profile by roster id
+// @access  Private
+router.delete('/roster/:id', ensureAuthenticated, (req, res) => {
+  Student.findOne({ user: req.user.id }).then(profile => {
     // Get remove index
     const removeIndex = profile.roster
       .map(item => item.id)
@@ -123,10 +110,13 @@ router.delete('/roster/:id', (req, res) => {
   });
 });
 
-router.delete('/:id', (req, res) => {
-  Profile.findOneAndRemove({ user: req.user.id })
+// @route   DELETE /profiles/:id
+// @desc    Delete user and profile account
+// @access  Private
+router.delete('/:id', ensureAuthenticated, (req, res) => {
+  Profile.findOneAndDelete({ user: req.user.id })
     .then(() => {
-      User.findOneAndRemove({ _id: req.user.id }).then(() => {
+      User.findOneAndDelete({ _id: req.user.id }).then(() => {
         req.flash('success_msg', 'User account deleted');
         res.redirect('/users/register');
       });

@@ -5,7 +5,7 @@ const router = express.Router();
 const { ensureAuthenticated } = require('../helpers/hbs');
 
 const User = require('../models/User');
-const Profile = require('../models/Profile');
+const Student = require('../models/Student');
 
 // Redirect to login user route
 router.get('/login', (req, res) => {
@@ -21,9 +21,10 @@ router.get('/register', (req, res) => {
 // @desc    Product Dashboard Route
 // @access  Private
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
-  Profile.find({ user: req.user.id })
-    .populate('user', ['firstName', 'lastName'])
+  Student.findOne({ user: req.user.id })
+    // .populate('user', ['-password'])
     .then(profile => {
+      // res.json(profile);
       res.render('dashboard/index', { profile });
     })
     .catch(err => {
@@ -31,7 +32,9 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
     });
 });
 
-// Login Form POST
+// @route   POST /users/login
+// @desc    User login
+// @access  Public
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', {
     successRedirect: '/users/dashboard',
@@ -40,18 +43,20 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-// Create user route
+// @route   POST /users/register
+// @desc    User register
+// @access  Private
 router.post('/register', (req, res) => {
   // Check for errors in the required form fields
   const { firstName, lastName, email, password } = req.body;
   let errors = [];
 
   if (!firstName || !lastName || !email || !password) {
-    errors.push({ message: 'Oops! Please complete each field' });
+    errors.push({ error: 'Oops! Please complete each field' });
   }
 
   if (password.length < 4) {
-    errors.push({ message: 'Password must be at least 4 characters' });
+    errors.push({ error: 'Password must be at least 4 characters' });
   }
 
   if (errors.length > 0) {
@@ -89,7 +94,7 @@ router.post('/register', (req, res) => {
                   'success_msg',
                   'You are now registered and can log in!'
                 );
-                res.redirect('/users/dashboard');
+                res.redirect('/users/login');
               })
               .catch(err => {
                 console.log(err);
@@ -101,23 +106,13 @@ router.post('/register', (req, res) => {
     });
 });
 
-// Logout User
+// @route   GET /users/logout
+// @desc    User logout
+// @access  Public
 router.get('/logout', (req, res) => {
   req.logout();
   req.flash('success_msg', 'You are logged out');
   res.redirect('/users/login');
-});
-
-// Get users
-router.get('/all', (req, res) => {
-  Profile.find({ user: req.user.id })
-    .populate('product')
-    .then(users => {
-      res.status(200).json(users);
-    })
-    .catch(err => {
-      res.status(404).json(err);
-    });
 });
 
 // Delete User

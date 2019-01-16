@@ -1,6 +1,11 @@
 {{!-- Profile display --}}
 <div class="container bg-light">
   <div class="row">
+    <div class="col-md-12 text-center">
+      <h1 class="display-4">My Profile</h1>
+    </div>
+  </div>
+  <div class="row">
     <div class="col-md-12 mt-2">
       <div class="card card-body bg-info mb-3">
         <div class="row">
@@ -24,7 +29,8 @@
       </div>
       <div class="col-md-12 bg">
         <div class="row justify-content-center m-5">
-          <form action="/profiles/{{user.id}}" method="delete">
+          <form action="/profiles/{{user.id}}?_method=DELETE" method="post">
+            <input type="hidden" name="_method">
             <button type="submit" class="btn btn-danger">Delete Profile</button>
           </form>
         </div>

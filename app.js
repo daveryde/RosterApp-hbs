@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 // Load routes
 const users = require('./routes/users');
 const profiles = require('./routes/profiles');
+const students = require('./routes/students');
 
 // Passport Config
 require('./config/passport')(passport);
@@ -94,6 +95,7 @@ app.get('/about', (req, res) => {
 
 app.use('/users', users);
 app.use('/profiles', profiles);
+app.use('/students', students);
 
 const port = process.env.PORT || 3000;
 

@@ -1,8 +1,12 @@
 {{!-- User dashboard landing page --}}
 <div class="row mt-4 align-items-center justify-content-around">
   <div class="col-md-12">
-    <div class="jumbotron bg-secondary">
-      <div class="row mt-4 align-items-center justify-content-around">
+    <div class="card cardbody bg-secondary mb-4">
+      <div class="row align-items-center justify-content-around">
+        {{!-- Dashboard Title --}}
+        <div class="col-md-12 text-center">
+          <h1 class="display-4 text-white">Dashboard</h1>
+        </div>
         {{!-- User card info message --}}
         <div class="col-md-5">
           <div class="card bg-info text-white mb-3">
@@ -28,7 +32,14 @@
             {{/profile}}
             <p class="lead">Welcome to your personalized dashboard. Edit your profile or start making rosters!</p>
             {{!-- Create Roster Link --}}
-            <a href="/profiles/createRoster" class="btn btn-success">Create A Roster</a>
+            <form action="/students/new" method="post">
+              <div class="form-row justify-content-center">
+                <div class="col-md-6">
+                  <input type="text" name="classroom" class="form-control" placeholder="Class Title">
+                </div>
+                <button class="btn btn-success" type="submit">Submit</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>

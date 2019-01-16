@@ -1,14 +1,9 @@
 {{!-- Roster search and add form section --}}
-{{#profile}}
 
 <section class="row justify-content-center mt-4 mb-5 print-hidden">
   <div class="col-md-4">
-    <form action="/profiles/add/roster/" method="post">
+    <form action="/students/add/roster/{{id}}" method="post">
       <fieldset>
-        <div class="form-group">
-          <input type="title" class="form-control" name="title" id="inputName" aria-describedby="emailHelp" value={{title}}>
-          <small id="nameHelp" class="form-text text-muted">This name will be displayed under each picture.</small>
-        </div>
         <div class="form-group">
           <input type="name" class="form-control" name="name" id="inputName" aria-describedby="emailHelp" placeholder="Enter Name">
           <small id="nameHelp" class="form-text text-muted">This name will be displayed under each picture.</small>
@@ -22,14 +17,15 @@
   </div>
 </section>
 
-{{!-- Display roster tiles --}}
-<div class="row">
-  {{#each roster}}
-  {{> figure}}
-  {{/each}}
-</div>
-{{/profile}}
 
+{{!-- Display roster tiles --}}
+{{#products}}
+{{#each roster}}
+<div class="row">
+  {{> figure}}
+</div>
+{{/each}}
+{{/products}}
 
 {{!-- </div>
 <div class="row mt-5">
