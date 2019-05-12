@@ -1,7 +1,8 @@
 {{!-- Card displaying image and information --}}
+{{#roster}}
 <div class='col-sm-4 col-md-4 col-lg-3 mb-2'>
   <div class='card'>
-    <a href='/products/{{id}}'><img class='card-img-top' src="https://apps.azcorrections.gov/mugshots/{{number}}.jpg"
+    <a href='/products/{{_id}}'><img class='card-img-top' src="https://apps.azcorrections.gov/mugshots/{{number}}.jpg"
         id={{number}} alt={{name}}></a>
     <div class='card-body text-center'>
       <h4 class='card-title custom-title'>{{name}}</h4>
@@ -10,7 +11,7 @@
       </p>
 
       {{!-- Delete button --}}
-      <form action="/students/{{id}}?_method=DELETE" method="post">
+      <form action="/students/{{_id}}?_method=DELETE" method="post">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger btn-block print-hidden">
           Delete</button>
@@ -18,3 +19,4 @@
     </div>
   </div>
 </div>
+{{/roster}}

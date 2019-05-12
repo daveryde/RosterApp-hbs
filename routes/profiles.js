@@ -19,9 +19,8 @@ router.get('/createProfile', ensureAuthenticated, (req, res) => {
 // @access  Private
 router.get('/createRoster', ensureAuthenticated, (req, res) => {
   Student.find({ user: req.user.id })
-    .populate('user', ['-password'])
-    .then(profile => {
-      res.render('roster/add', { profile });
+    .then(student => {
+      res.render('roster/add', { student });
     });
 });
 
@@ -43,11 +42,10 @@ router.get('/my', ensureAuthenticated, (req, res) => {
 // @desc    Find profile and display student info
 // @access  Private
 router.get('/findRoster/:id', (req, res) => {
-  Student.find({ user: req.params.id })
-    .populate('user', ['-password'])
-    .then(profile => {
-      if (profile) {
-        res.render('roster/add', { profile });
+  Student.find({ _id: req.params.id })
+    .then(student => {
+      if (student) {
+        res.render('roster/add', { student });
       }
     });
 });

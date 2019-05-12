@@ -6,6 +6,7 @@ const { ensureAuthenticated } = require('../helpers/hbs');
 
 const User = require('../models/User');
 const Student = require('../models/Student');
+const Profile = require('../models/Profile');
 
 // Redirect to login user route
 router.get('/login', (req, res) => {
@@ -21,11 +22,16 @@ router.get('/register', (req, res) => {
 // @desc    Product Dashboard Route
 // @access  Private
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
-  Student.findOne({ user: req.user.id })
+  Profile.findOne({ user: req.user.id })
     // .populate('user', ['-password'])
     .then(profile => {
+      Student.find({ user: profile.user })
+      .then(student => {
       // res.json(profile);
-      res.render('dashboard/index', { profile });
+      res.render('dashboard/index', { 
+        student,
+        profile });
+      });
     })
     .catch(err => {
       res.status(404).json(err);

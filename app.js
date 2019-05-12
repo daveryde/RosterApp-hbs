@@ -90,7 +90,9 @@ app.get('/', (req, res) => {
 });
 
 app.get('/about', (req, res) => {
-  res.render('home');
+  res.render('home'), {
+    title: 'About'
+  };
 });
 
 app.use('/users', users);

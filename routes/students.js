@@ -32,8 +32,8 @@ router.post('/new', ensureAuthenticated, (req, res) => {
 // @route   POST /students/add/roster
 // @desc    Add to student roster
 // @access  Private
-router.post('/add/roster/', ensureAuthenticated, (req, res) => {
-  Student.findOne({ user: req.user.id })
+router.post('/add/roster/:id', ensureAuthenticated, (req, res) => {
+  Student.findOne({ _id: req.params.id })
     .then(student => {
       const studentInfo = {
         teacher: req.user.id,
@@ -45,7 +45,7 @@ router.post('/add/roster/', ensureAuthenticated, (req, res) => {
 
       student
         .save()
-        .then(student => res.redirect('/profiles/createRoster'))
+        .then(student => res.redirect(`/profiles/findRoster/${req.params.id}`))
         .catch(err => res.json(err));
     })
     .catch(err => res.json(err));
