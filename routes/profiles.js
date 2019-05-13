@@ -75,14 +75,14 @@ router.post('/add', ensureAuthenticated, (req, res) => {
       Profile.findOneAndUpdate(
         { user: req.user.id },
         { $set: profileFields },
-        { new: true }
+        { new: false }
       );
     } else {
       // If no user, then create one
       new Profile(profileFields)
         .save()
         .then(() => {
-          req.flash('success_msg', 'Profile successfully created!');
+          req.flash('success_msg', 'Profile successfully updated!');
           res.redirect('/users/dashboard');
         })
         .catch(err => res.json(err));
