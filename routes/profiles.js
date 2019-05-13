@@ -94,17 +94,10 @@ router.post('/add', ensureAuthenticated, (req, res) => {
 // @desc    Remove roster from profile by roster id
 // @access  Private
 router.delete('/roster/:id', ensureAuthenticated, (req, res) => {
-  Student.findOne({ user: req.user.id }).then(profile => {
-    // Get remove index
-    const removeIndex = profile.roster
-      .map(item => item.id)
-      .indexOf(req.params.id);
-
-    // Splice out of array
-    profile.roster.splice(removeIndex, 1);
-
-    // Save
-    profile.save().then(profile => res.redirect('/users/dashboard'));
+  Student.findOneAndDelete({ _id: req.params.id })
+    .then(() => {
+      req.flash('success_msg', 'Class roster deleted');
+      res.redirect('/users/dashboard');
   });
 });
 
