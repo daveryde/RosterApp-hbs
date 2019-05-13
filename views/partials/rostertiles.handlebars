@@ -1,27 +1,22 @@
-<div class="container">
-  <div class="jumbotron bg-secondary">
-    <div class="row mt-4 align-items-center justify-content-around">
-      <div class="col-md-4 text-center">
-        <h3 class="text-white">By: {{user.firstName}}, {{user.lastName}}</h3>
-        {{#each student}}
-        {{!-- List of each roster --}}
+<div class="row mt-4">
+  {{#each student}}
+  <div class="col-md-4 text-center">
+    {{!-- List of each roster --}}
 
-        <div class="card text-white bg-warning mb-3 shadow-lg" style="max-width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">{{classroom}}</h5>
-            <h6 class="card-subtitle mb-4">Last Edited: {{formatDate date 'MMMM Do YYYY'}}</h6>
-            <div class="row justify-content-around">
-              <form action="/profiles/roster/{{_id}}?_method=DELETE" method="post" class="inline-form">
-                <input type="hidden" name="_method" value="DELETE">
-                <button type="submit" class="btn btn-danger btn-block print-hidden">
-                  Delete Roster</button>
-                <a href="/profiles/findRoster/{{_id}}" class="btn btn-success">View Roster</a>
-              </form>
-            </div>
-          </div>
+    <div class="card text-white bg-warning mb-3 shadow-lg">
+      <div class="card-body">
+        <h5 class="card-title">{{classroom}}</h5>
+        <h6 class="card-subtitle mb-4">Last Edited: {{formatDate date 'MMMM Do YYYY'}}</h6>
+        <div class="row flex-column">
+          <form action="/profiles/roster/{{_id}}?_method=DELETE" method="post" class="inline-form">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit" class="btn btn-danger print-hidden">
+              Delete Roster</button>
+            <a href="/profiles/findRoster/{{_id}}" class="btn btn-success">View Roster</a>
+          </form>
         </div>
-        {{/each}}
       </div>
     </div>
   </div>
+  {{/each}}
 </div>

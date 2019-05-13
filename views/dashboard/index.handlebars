@@ -1,16 +1,18 @@
 {{!-- User dashboard landing page --}}
-<div class="row mt-4 align-items-center justify-content-around">
+<div class="row mt-4">
   <div class="col-md-12">
-    <div class="card cardbody bg-secondary mb-4">
-      <div class="row align-items-center justify-content-around">
+    <div class="card cardbody bg-secondary m-2">
+      <div class="row">
         {{!-- Dashboard Title --}}
         <div class="col-md-12 text-center">
-          <h1 class="display-4 text-white">Dashboard</h1>
+          <h2 class="display-4 text-white">Dashboard</h2>
         </div>
         {{!-- User card info message --}}
         <div class="col-md-5">
-          <div class="card bg-info text-white mb-3">
-            <div class="card-header text-center">Name: {{user.firstName}}</div>
+          <div class="card bg-info text-white m-2">
+            <div class="card-header text-center">
+              <h3>Name: {{user.firstName}}</h3>
+            </div>
             <div class="card-body">
               <h5 class="card-title">Email: {{user.email}}</h5>
               <p class="card-text">This message was tailored specifically to you, {{user.firstName}}. We think you're
@@ -48,4 +50,5 @@
 </div>
 {{!-- Roster Titles --}}
 {{!-- Display tiles if user has created a roster --}}
+
 {{> rostertiles}}
