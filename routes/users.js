@@ -25,12 +25,12 @@ router.get('/dashboard', ensureAuthenticated, (req, res) => {
   Profile.findOne({ user: req.user.id })
     // .populate('user', ['-password'])
     .then(profile => {
-      Student.find({ user: profile.user })
-      .then(student => {
-      // res.json(profile);
-      res.render('dashboard/index', { 
-        student,
-        profile });
+      Student.find({ user: profile.user }).then(student => {
+        // res.json(profile);
+        res.render('dashboard/index', {
+          student,
+          profile
+        });
       });
     })
     .catch(err => {

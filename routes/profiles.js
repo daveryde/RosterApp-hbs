@@ -18,10 +18,9 @@ router.get('/createProfile', ensureAuthenticated, (req, res) => {
 // @desc    Find profile and display roster add page
 // @access  Private
 router.get('/createRoster', ensureAuthenticated, (req, res) => {
-  Student.find({ user: req.user.id })
-    .then(student => {
-      res.render('roster/add', { student });
-    });
+  Student.find({ user: req.user.id }).then(student => {
+    res.render('roster/add', { student });
+  });
 });
 
 // @route   GET /profile/my
@@ -42,12 +41,11 @@ router.get('/my', ensureAuthenticated, (req, res) => {
 // @desc    Find profile and display student info
 // @access  Private
 router.get('/findRoster/:id', (req, res) => {
-  Student.find({ _id: req.params.id })
-    .then(student => {
-      if (student) {
-        res.render('roster/add', { student });
-      }
-    });
+  Student.find({ _id: req.params.id }).then(student => {
+    if (student) {
+      res.render('roster/add', { student });
+    }
+  });
 });
 
 // @route   GET /profile/edit/:id
@@ -94,10 +92,9 @@ router.post('/add', ensureAuthenticated, (req, res) => {
 // @desc    Remove roster from profile by roster id
 // @access  Private
 router.delete('/roster/:id', ensureAuthenticated, (req, res) => {
-  Student.findOneAndDelete({ _id: req.params.id })
-    .then(() => {
-      req.flash('success_msg', 'Class roster deleted');
-      res.redirect('/users/dashboard');
+  Student.findOneAndDelete({ _id: req.params.id }).then(() => {
+    req.flash('success_msg', 'Class roster deleted');
+    res.redirect('/users/dashboard');
   });
 });
 
