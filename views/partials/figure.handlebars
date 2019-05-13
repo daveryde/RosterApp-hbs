@@ -11,7 +11,7 @@
       </p>
 
       {{!-- Delete button --}}
-      <form action="/students/{{_id}}?_method=DELETE" method="post">
+      <form action="/students/{{_id}}/{{../id}}?_method=DELETE" method="post">
         <input type="hidden" name="_method" value="DELETE">
         <button type="submit" class="btn btn-danger btn-block print-hidden">
           Delete</button>

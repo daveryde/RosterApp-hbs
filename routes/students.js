@@ -51,10 +51,20 @@ router.post('/add/roster/:id', ensureAuthenticated, (req, res) => {
     .catch(err => res.json(err));
 });
 
-router.delete('/:id', (req, res) => {
-  Student.findOneAndDelete({ _id: req.params.id }).then(student => {
-    res.redirect('/profiles/createRoster');
-  });
+router.delete('/:roster_id/:student_id', ensureAuthenticated, (req, res) => {
+  Student.findOne({ _id: req.params.student_id })
+  .then(student => {
+    const personIndex = student.roster
+    .map(person => person._id.toString()).indexOf(req.params.roster_id);
+
+    // console.log(student.roster[personIndex]._id);
+
+    student.roster.splice(personIndex, 1);
+
+    student.save()
+    .then(student => res.redirect(`/profiles/findRoster/${req.params.student_id}`))
+  })
+  .catch(err => res.json(err));
 });
 
 module.exports = router;
