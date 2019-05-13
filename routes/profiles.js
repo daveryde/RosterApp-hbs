@@ -52,9 +52,36 @@ router.get('/findRoster/:id', (req, res) => {
 // @desc    Find profile by id and display edit details page
 // @access  Private
 router.get('/edit/:id', ensureAuthenticated, (req, res) => {
-  Profile.findOne({ user: req.params.id }).then(profile => {
+  Profile.findOneAndUpdate({ user: req.params.id }).then(profile => {
     res.render('profile/createProfile', { profile });
   });
+});
+
+// @route   POST /profiles/update
+// @desc    Create/edit profile and redirect to dashboard
+// @access  Private
+router.post('/update', ensureAuthenticated, (req, res) => {
+  // Get user inputs
+  const profileFields = {
+    user: req.user.id,
+    handle: req.body.handle,
+    title: req.body.title
+  };
+
+  Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }).then(
+    profile => {
+      res.flash('success_msg', 'Profile successfully updated');
+      res.redirect('/users/dashboard');
+    }
+  );
+
+  new Profile(profileFields)
+    .save()
+    .then(() => {
+      req.flash('success_msg', 'Profile successfully created!');
+      res.redirect('/users/dashboard');
+    })
+    .catch(err => res.json(err));
 });
 
 // @route   POST /profiles/add
@@ -68,24 +95,13 @@ router.post('/add', ensureAuthenticated, (req, res) => {
     title: req.body.title
   };
 
-  Profile.find({ user: req.user.id }).then(profile => {
-    if (profile.handle) {
-      Profile.findOneAndUpdate(
-        { user: req.user.id },
-        { $set: profileFields },
-        { new: false }
-      );
-    } else {
-      // If no user, then create one
-      new Profile(profileFields)
-        .save()
-        .then(() => {
-          req.flash('success_msg', 'Profile successfully updated!');
-          res.redirect('/users/dashboard');
-        })
-        .catch(err => res.json(err));
-    }
-  });
+  new Profile(profileFields)
+    .save()
+    .then(() => {
+      req.flash('success_msg', 'Profile successfully created!');
+      res.redirect('/users/dashboard');
+    })
+    .catch(err => res.json(err));
 });
 
 // @route   DELETE /profiles/roster/:id

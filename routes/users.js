@@ -22,16 +22,22 @@ router.get('/register', (req, res) => {
 // @desc    Product Dashboard Route
 // @access  Private
 router.get('/dashboard', ensureAuthenticated, (req, res) => {
-  Profile.findOne({ user: req.user.id })
-    // .populate('user', ['-password'])
+  Profile.findOne({ _id: req.user.id })
     .then(profile => {
-      Student.find({ user: profile.user }).then(student => {
-        // res.json(profile);
-        res.render('dashboard/index', {
-          student,
-          profile
+      if (profile) {
+        Student.find({ user: profile.user }).then(student => {
+          res.render('dashboard/index', {
+            student,
+            profile
+          });
         });
-      });
+      } else {
+        Student.find({ user: req.user.id }).then(student => {
+          res.render('dashboard/index', {
+            student
+          });
+        });
+      }
     })
     .catch(err => {
       res.status(404).json(err);

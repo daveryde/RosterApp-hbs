@@ -27,11 +27,13 @@
         {{!-- Jumbotron landing --}}
         <div class="col-md-7">
           <div class="jumbotron bg-info text-center text-white">
+            {{#if profile}}
             {{#profile}}
             <p class="lead">
               <span class="font-weight-bold">Hey, {{handle}}!</span>
             </p>
             {{/profile}}
+            {{/if}}
             <p class="lead">Welcome to your personalized dashboard. Edit your profile or start making rosters!</p>
             {{!-- Create Roster Link --}}
             <form action="/students/new" method="post">
