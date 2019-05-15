@@ -4,14 +4,29 @@
 <div class="row justify-content-center">
   <div class="col-md-6">
     {{!-- Create Profile Form --}}
-    <form action="/profiles/add" method="post">
+    {{#if profile}}
+    <form action="/profiles/update?_method=PUT" method="post">
+      <input type="hidden" name="_method" value="PUT">
       <div class="form-group">
-        <input type="text" name="handle" class="form-control" id="handle" placeholder="Nickname" value={{profile.handle}}>
+        <input type="text" name="handle" class="form-control" id="handle" placeholder="Nickname"
+          value={{profile.handle}}>
       </div>
       <div class="form-group">
         <input type="text" name="title" class="form-control" id="title" placeholder="Job Title" value={{profile.title}}>
       </div>
       <button type="submit" class="btn btn-light">Submit</button>
     </form>
+    {{else}}
+    <form action="/profiles/add" method="post">
+      <div class="form-group">
+        <input type="text" name="handle" class="form-control" id="handle" placeholder="Nickname"
+          value={{profile.handle}}>
+      </div>
+      <div class="form-group">
+        <input type="text" name="title" class="form-control" id="title" placeholder="Job Title" value={{profile.title}}>
+      </div>
+      <button type="submit" class="btn btn-light">Submit</button>
+    </form>
+    {{/if}}
   </div>
 </div>

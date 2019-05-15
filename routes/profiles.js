@@ -52,7 +52,7 @@ router.get('/findRoster/:id', (req, res) => {
 // @desc    Find profile by id and display edit details page
 // @access  Private
 router.get('/edit/:id', ensureAuthenticated, (req, res) => {
-  Profile.findOneAndUpdate({ user: req.params.id }).then(profile => {
+  Profile.findOne({ user: req.params.id }).then(profile => {
     res.render('profile/createProfile', { profile });
   });
 });
@@ -60,28 +60,19 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
 // @route   POST /profiles/update
 // @desc    Create/edit profile and redirect to dashboard
 // @access  Private
-router.post('/update', ensureAuthenticated, (req, res) => {
-  // Get user inputs
-  const profileFields = {
-    user: req.user.id,
-    handle: req.body.handle,
-    title: req.body.title
-  };
+router.put('/update', ensureAuthenticated, (req, res) => {
+  Profile.findOne({
+    user: req.params.id
+  }).then(profile => {
+    // New Values
+    profile.title = req.body.title;
+    profile.title = req.body.handle;
 
-  Profile.findOneAndUpdate({ user: req.user.id }, { $set: profileFields }).then(
-    profile => {
-      res.flash('success_msg', 'Profile successfully updated');
-      res.redirect('/users/dashboard');
-    }
-  );
-
-  new Profile(profileFields)
-    .save()
-    .then(() => {
-      req.flash('success_msg', 'Profile successfully created!');
-      res.redirect('/users/dashboard');
-    })
-    .catch(err => res.json(err));
+    profile.save().then(profile => {
+      req.flash('success_msg', 'Profile updated');
+      res.redirect('/my');
+    });
+  });
 });
 
 // @route   POST /profiles/add
