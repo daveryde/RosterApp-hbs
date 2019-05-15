@@ -27,19 +27,12 @@
         {{!-- Jumbotron landing --}}
         <div class="col-md-7">
           <div class="jumbotron bg-info text-center text-white">
-            {{#if profile}}
-            {{#profile}}
-            <p class="lead">
-              <span class="font-weight-bold">Hey, {{handle}}!</span>
-            </p>
-            {{/profile}}
-            {{/if}}
             <p class="lead">Welcome to your personalized dashboard. Edit your profile or start making rosters!</p>
             {{!-- Create Roster Link --}}
             <form action="/students/new" method="post">
               <div class="form-row justify-content-center">
                 <div class="col-md-6">
-                  <input type="text" name="classroom" class="form-control" placeholder="Class Title">
+                  <input type="text" name="classroom" class="form-control mb-2" placeholder="Class Title">
                 </div>
                 <button class="btn btn-success" type="submit">Submit</button>
               </div>
